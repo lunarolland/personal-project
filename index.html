@@ -222,7 +222,7 @@
       border: 1px solid #0077b6;
       border-radius:16px;
       position:relative;
-      overflow:hidden;
+      overflow:hidden; /* OK now (popup moved OUTSIDE the board) */
     }
     .tile{
       position:absolute;
@@ -335,7 +335,7 @@
     }
 
     /* =============================
-       LEVEL 2 (Crossword)  (your current)
+       LEVEL 2 (Crossword)
        ============================= */
     .level2Layout{
       flex: 1;
@@ -395,6 +395,9 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       caret-color: #0077b6;
+      padding:0;
+      margin:0;
+      line-height:1;
     }
     .cell:focus-within{
       outline: 3px solid rgba(0,119,182,0.35);
@@ -498,14 +501,12 @@
       gap:0;
       background:#add8e6;
     }
-
     .waldoFull{
       position: absolute;
       inset: 0;
       background:#add8e6;
       overflow:hidden;
     }
-
     .waldoImg{
       width: 100%;
       height: 100%;
@@ -552,7 +553,6 @@
       object-fit: contain;
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12));
     }
-
     .hudBtn{
       pointer-events:auto;
       border-radius:999px;
@@ -707,63 +707,43 @@
     }
 
     /* =============================
-       GIFT 2 – LOVE LETTER ANIMATION
+       Gift 2: letter interaction
        ============================= */
-    .letterStage{
+    .giftLetterWrap{
       flex:1;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      gap:14px;
+      gap:12px;
       text-align:center;
     }
-
-    .letter{
-      width: 240px;
-      height: auto;
-      cursor: pointer;
+    .letterBtn{
+      width: 260px;
+      height: 260px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(0,0,0,0.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+    }
+    .letterBtn img{
+      width: 280px;
+      height:auto;
+      object-fit:contain;
       user-select:none;
       -webkit-user-drag:none;
-      filter: drop-shadow(0 14px 30px rgba(0,0,0,0.35));
-      transition:
-        transform 420ms cubic-bezier(.22,1,.36,1),
-        opacity 280ms ease;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+    }
+    .letterPop{
+      animation: popIn 260ms ease-out;
     }
 
-    .letter.closed{
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .letter.opening{
-      transform: scale(1.08) rotate(-2deg);
-    }
-
-    .letter.open{
-      animation: none;
-      transform: scale(1);
-    }
-
-    .tapHint{
-      font-size:13px;
-      opacity:0.85;
-      animation: pulse 1.8s ease-in-out infinite;
-      color:#032030;
-    }
-
-    @keyframes float{
-      0%{ transform: translateY(0); }
-      50%{ transform: translateY(-6px); }
-      100%{ transform: translateY(0); }
-    }
-
-    @keyframes pulse{
-      0%{ opacity:0.5; }
-      50%{ opacity:1; }
-      100%{ opacity:0.5; }
-    }
-
-    /* Mobile arrow controls */
+    /* =============================
+       Mobile arrow controls (Level 1)
+       ============================= */
     .mobileControls{
       display:flex;
       flex-direction:column;
@@ -771,12 +751,10 @@
       gap:8px;
       margin-top: 8px;
     }
-
     .mobileControls .middleRow{
       display:flex;
       gap:12px;
     }
-
     .mobileControls button{
       width:56px;
       height:56px;
@@ -786,51 +764,35 @@
       background: rgba(255,255,255,0.7);
       color:#032030;
       border: 1px solid rgba(0,0,0,0.15);
+      padding:0;
     }
-
     @media (hover: hover) {
       .mobileControls{ display:none; }
     }
 
     /* =============================
-   Mobile crossword fixes
-   ============================= */
-    /* =============================
-   Mobile crossword – FINAL FIX
-   ============================= */
+       Mobile crossword – fit letters in cells
+       ============================= */
     @media (max-width: 480px) {
-
-  /* make the cell control the text size */
-      #level2 .cell{
-        display:flex;
-        align-items:center;
-        justify-content:center;
+      /* reduce board padding so cells get bigger */
+      .crossBoard{
+        padding: 10px;
+        gap: 3px;
       }
-
+      /* letters scale with cell size */
       #level2 .cell input{
-        width:100%;
-        height:100%;
-        font-size: 65%;
+        font-size: 65%;   /* percentage of cell height */
         line-height: 1;
         font-weight: 900;
-        padding: 0;
-        margin: 0;
+        letter-spacing: 0.2px;
       }
-
-  /* clue numbers */
+      /* numbers already OK, but keep tight */
       .cell .num{
         font-size: 8px;
         top: 2px;
         left: 3px;
       }
-
-      .crossBoard{
-        padding: 10px;
-        gap: 3px;
-      }
     }
-
-
   </style>
 </head>
 
@@ -911,33 +873,38 @@
           <div class="sprite" id="player">
             <img src="art/player_stand.png" alt="player">
           </div>
+          <!-- Walls get injected here -->
         </div>
       </div>
-      <div class="popup hidden" id="winPopup1">
-            <div class="popupCard">
-              <div class="winChars">
-                <img class="winChar" src="art/player_stand.png" alt="him">
-                <img class="winChar" src="art/guide_with_letter.png" alt="you">
-              </div>
-              <div class="popupTitle">You found the letter</div>
-              <div class="winLetterRow">
-                <span class="mutedText">Letter:</span>
-                <img class="winLetter" src="art/letter_h.png" alt="H">
-              </div>
-              <div class="popupText">Good job loser</div>
-              <div class="row">
-                <button id="openGift1">Open Gift 1</button>
-                <button class="secondary" id="backToLevelsFromWin1">Back to levels</button>
-                <button class="secondary" id="replay1">Replay</button>
-              </div>
-            </div>
-      </div>
+
+      <!-- Mobile arrows (only show on phones) -->
       <div class="mobileControls">
         <button data-dir="up">↑</button>
         <div class="middleRow">
           <button data-dir="left">←</button>
           <button data-dir="down">↓</button>
           <button data-dir="right">→</button>
+        </div>
+      </div>
+
+      <!-- ✅ MOVED OUTSIDE the board so it won't be cropped -->
+      <div class="popup hidden" id="winPopup1">
+        <div class="popupCard">
+          <div class="winChars">
+            <img class="winChar" src="art/player_stand.png" alt="him">
+            <img class="winChar" src="art/guide_with_letter.png" alt="you">
+          </div>
+          <div class="popupTitle">You found the letter</div>
+          <div class="winLetterRow">
+            <span class="mutedText">Letter:</span>
+            <img class="winLetter" src="art/letter_h.png" alt="H">
+          </div>
+          <div class="popupText">Good job loser</div>
+          <div class="row">
+            <button id="openGift1">Open Gift 1</button>
+            <button class="secondary" id="backToLevelsFromWin1">Back to levels</button>
+            <button class="secondary" id="replay1">Replay</button>
+          </div>
         </div>
       </div>
     </div>
@@ -959,7 +926,7 @@
         <div class="badge">Level 2 • Crossword</div>
         <button class="secondary" id="backBtn2">←</button>
       </div>
-      <p class="hint">Fill the crossword. The highlighted square reveals the letter </p>
+      <p class="hint">Fill the crossword. The highlighted square reveals the letter</p>
 
       <div class="level2Layout">
         <div class="crossWrap">
@@ -1024,21 +991,23 @@
       </div>
     </div>
 
-    <!-- GIFT 2: LOVE LETTER (UPDATED) -->
+    <!-- GIFT 2: Letter → Open → PDF -->
     <div class="level hidden" id="gift2">
       <div class="topBar">
         <div class="badge">Gift 2</div>
         <button class="secondary" id="backToLevelsFromGift2">←</button>
       </div>
 
-      <div class="letterStage">
-        <img
-          id="letterImg"
-          src="art/letter_closed.png"
-          alt="Love letter"
-          class="letter closed"
-        />
-        <p class="tapHint" id="tapHint">Tap to open 💌</p>
+      <div class="giftLetterWrap">
+        <p class="hint" id="gift2Hint">Tap the letter 💌</p>
+
+        <button class="letterBtn" id="letterBtn" aria-label="Open letter">
+          <img id="letterImg" src="art/letter_closed.png" alt="letter">
+        </button>
+
+        <p class="hint" style="max-width:320px;">
+          (First tap: open it. Second tap: read it.)
+        </p>
       </div>
     </div>
 
@@ -1065,6 +1034,20 @@
             <button class="hudBtn" id="hintBtn">Hint</button>
             <button class="hudBtn" id="solutionBtn">Solution</button>
             <button class="hudBtn" id="backBtn3">←</button>
+          </div>
+        </div>
+
+        <!-- ✅ NEW: Intro popup -->
+        <div class="popup hidden" id="intro3Popup">
+          <div class="popupCard">
+            <div class="popupTitle">Level 3</div>
+            <div class="popupText">
+              Find the character holding the letter <b>D</b> on the picture.<br><br>
+              Tap the right spot to win. Tap anywhere else… loser 😌
+            </div>
+            <div class="row">
+              <button id="startLevel3Btn">Ok let's go</button>
+            </div>
           </div>
         </div>
 
@@ -1307,18 +1290,26 @@
       });
     });
 
+    // --- Level 3 intro popup logic ---
+    const intro3Popup = document.getElementById("intro3Popup");
+    const startLevel3Btn = document.getElementById("startLevel3Btn");
+    function openIntro3(){ intro3Popup?.classList.remove("hidden"); }
+    function closeIntro3(){ intro3Popup?.classList.add("hidden"); }
+    startLevel3Btn?.addEventListener("click", closeIntro3);
+
     level3Btn.addEventListener("click", () => {
       if (!level2Complete) return;
       showScreen(level3);
       requestAnimationFrame(() => {
         applyHitboxFromConfig();
         hideSolutionRing();
+        openIntro3(); // show instructions first
       });
     });
 
     backBtn1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
     backBtn2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
-    backBtn3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backBtn3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); closeIntro3(); });
 
     backToLevelsFromGift1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
     backToLevelsFromGift2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
@@ -1410,6 +1401,17 @@
       placeSprites();
     }
 
+    // Move helper (used by keyboard + mobile arrows)
+    function movePlayer(dx, dy) {
+      const nx = px + dx;
+      const ny = py + dy;
+      if (canMove(nx, ny)) {
+        px = nx; py = ny;
+        placeSprites();
+        checkWin1();
+      }
+    }
+
     document.addEventListener("keydown", (e) => {
       if (level1.classList.contains("hidden")) return;
       if (!winPopup1.classList.contains("hidden")) return;
@@ -1424,16 +1426,22 @@
 
       if (dx === 0 && dy === 0) return;
       e.preventDefault();
-
-      const nx = px + dx;
-      const ny = py + dy;
-
-      if (canMove(nx, ny)) {
-        px = nx; py = ny;
-        placeSprites();
-        checkWin1();
-      }
+      movePlayer(dx, dy);
     }, { passive:false });
+
+    // Mobile arrow buttons
+    document.querySelectorAll(".mobileControls button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (level1.classList.contains("hidden")) return;
+        if (!winPopup1.classList.contains("hidden")) return;
+
+        const dir = btn.dataset.dir;
+        if (dir === "up") movePlayer(0, -1);
+        if (dir === "down") movePlayer(0, 1);
+        if (dir === "left") movePlayer(-1, 0);
+        if (dir === "right") movePlayer(1, 0);
+      });
+    });
 
     replay1.addEventListener("click", resetLevel1);
 
@@ -1459,7 +1467,7 @@
     });
 
     // =============================
-    // Level 2 Crossword (your current JS)
+    // Level 2 Crossword
     // =============================
     const crossBoard = document.getElementById("crossBoard");
     const winPopup2 = document.getElementById("winPopup2");
@@ -1737,56 +1745,44 @@
     checkAllBtn.addEventListener("click", () => {
       clearCheckPaintAll();
       checkInputs([...inputRefs]);
-      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.remove("hidden"); }
+      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.removeunningPopup2.classList.remove("hidden"); }
     });
 
     openGift2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(gift2); });
     backToLevelsFromWin2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(levelSelect); updateSelectUI(); });
 
     // =============================
-    // Gift 2 – Love Letter logic (UPDATED)
+    // Gift 2: letter closed -> open -> PDF
     // =============================
+    const letterBtn = document.getElementById("letterBtn");
     const letterImg = document.getElementById("letterImg");
-    const tapHint = document.getElementById("tapHint");
-    let letterState = "closed"; // closed → open → revealed
+    const gift2Hint = document.getElementById("gift2Hint");
 
-    function resetGift2Letter(){
-      letterState = "closed";
-      if (!letterImg || !tapHint) return;
+    let letterStage = 0; // 0 closed, 1 open
+
+    function resetGift2(){
+      letterStage = 0;
       letterImg.src = "art/letter_closed.png";
-      letterImg.style.opacity = "1";
-      tapHint.style.opacity = "1";
-      letterImg.classList.remove("open","opening");
-      letterImg.classList.add("closed");
-      tapHint.textContent = "Tap to open 💌";
+      gift2Hint.textContent = "Tap the letter 💌";
     }
 
-    if (letterImg) {
-      letterImg.addEventListener("click", () => {
-        if (letterState === "closed") {
-          letterState = "open";
-          letterImg.classList.remove("closed");
-          letterImg.classList.add("opening");
+    letterBtn?.addEventListener("click", () => {
+      // Add a tiny pop animation every tap
+      letterImg.classList.remove("letterPop");
+      void letterImg.offsetWidth;
+      letterImg.classList.add("letterPop");
 
-          setTimeout(() => {
-            letterImg.src = "art/letter_open.png";
-            letterImg.classList.remove("opening");
-            letterImg.classList.add("open");
-            tapHint.textContent = "Tap to read 💗";
-          }, 380);
-        }
-        else if (letterState === "open") {
-          letterState = "revealed";
-          letterImg.style.opacity = "0";
-          tapHint.style.opacity = "0";
+      if (letterStage === 0) {
+        letterStage = 1;
+        letterImg.src = "art/letter_open.png";
+        gift2Hint.textContent = "Tap again to read it 👀";
+      } else {
+        // More reliable on iPhone than window.open sometimes:
+        window.location.href = "art/loveletter.pdf";
+      }
+    });
 
-          setTimeout(() => {
-            // opens PDF (put your PDF at: art/loveletter.pdf)
-            window.open("art/loveletter.pdf", "_blank");
-          }, 300);
-        }
-      });
-    }
+    backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
 
     // =============================
     // Level 3 logic (hint / solution / win)
@@ -1807,8 +1803,7 @@
     let toastTimer = null;
     let ringTimer = null;
 
-    // ✅ THIS IS WHERE YOU CHANGE THE COORDINATES
-    // percentages of the screen
+    // ✅ Change coordinates here (percentages)
     const D_HITBOX = {
       left:  "89%",
       top:   "30%",
@@ -1878,6 +1873,7 @@
     waldoFull.addEventListener("click", (e) => {
       if (!winPopup3.classList.contains("hidden")) return;
       if (hintPopup && !hintPopup.classList.contains("hidden")) return;
+      if (intro3Popup && !intro3Popup.classList.contains("hidden")) return; // ✅ block clicks during intro
       if (e.target === hitboxD) return;
       showNope();
     });
@@ -1885,6 +1881,7 @@
     hitboxD.addEventListener("click", (e) => {
       e.stopPropagation();
       if (!winPopup3.classList.contains("hidden")) return;
+      if (intro3Popup && !intro3Popup.classList.contains("hidden")) return; // ✅ block during intro
       foundD();
     });
 
@@ -1914,7 +1911,7 @@
     });
 
     // =============================
-    // CHEST code logic
+    // CHEST code logic (single click handler)
     // =============================
     function openChestPopupUI() {
       chestPopup.classList.remove("hidden");
@@ -1949,7 +1946,6 @@
       });
     });
 
-    // (FIXED) Single chest click handler (you had it twice)
     chestBtn.addEventListener("click", () => {
       const allLevelsDone = level1Complete && level2Complete && level3Complete;
       if (!allLevelsDone) return;
@@ -1958,8 +1954,6 @@
         openChestPopupUI();
         return;
       }
-
-      // Chest is unlocked and open - show reward
       showScreen(finalReward);
     });
 
@@ -1968,58 +1962,13 @@
       if (typed === CHEST_CODE) {
         chestUnlocked = true;
         closeChestPopupUI();
-        updateSelectUI(); // updates chest image to open
+        updateSelectUI();
       } else {
         doNope();
       }
     });
 
     closeChestPopup.addEventListener("click", closeChestPopupUI);
-
-    // =============================
-    // Gift navigation
-    // =============================
-    openGift1.addEventListener("click", () => {
-      winPopup1.classList.add("hidden");
-      showScreen(gift1);
-    });
-
-    openGift2.addEventListener("click", () => {
-      winPopup2.classList.add("hidden");
-      resetGift2Letter();     // reset animation each time
-      showScreen(gift2);
-    });
-
-    backToLevelsFromGift2.addEventListener("click", () => {
-      showScreen(levelSelect);
-      updateSelectUI();
-    });
-
-    // Mobile controls for Level 1
-    function movePlayer(dx, dy) {
-      const nx = px + dx;
-      const ny = py + dy;
-
-      if (canMove(nx, ny)) {
-        px = nx;
-        py = ny;
-        placeSprites();
-        checkWin1();
-      }
-    }
-
-    document.querySelectorAll(".mobileControls button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (level1.classList.contains("hidden")) return;
-        if (!winPopup1.classList.contains("hidden")) return;
-
-        const dir = btn.dataset.dir;
-        if (dir === "up") movePlayer(0, -1);
-        if (dir === "down") movePlayer(0, 1);
-        if (dir === "left") movePlayer(-1, 0);
-        if (dir === "right") movePlayer(1, 0);
-      });
-    });
 
   </script>
 </body>
