@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday ❤️</title>
+
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#0b0b10;
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:#fff;
+    }
+
+    .game{
+      width: min(480px, 92vw);
+      aspect-ratio: 9 / 16;
+      background:#111;
+      border-radius:22px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:0 24px 70px rgba(0,0,0,0.6);
+    }
+
+    .hidden{ display:none !important; }
+
+    /* COVER */
+    .cover{
+      position:absolute;
+      inset:0;
+      background:url("art/cover.png") center/cover no-repeat;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:18px;
+    }
+    .overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,0.70), rgba(0,0,0,0));
+    }
+    .coverContent{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+      padding-bottom:10px;
+    }
+    .subtitle{
+      opacity:0.9;
+      font-size:15px;
+      text-align:center;
+    }
+
+    button{
+      cursor:pointer;
+      border:0;
+      border-radius:999px;
+      padding:14px 22px;
+      font-weight:800;
+      background:#ffffff;
+      color:#0b0b10;
+      font-size:15px;
+    }
+    button.secondary{
+      background: rgba(255,255,255,0.12);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    button:disabled{
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* SCREENS */
+    .level{
+      position:absolute;
+      inset:0;
+      background:#add8e6;
+      padding:18px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .topBar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .badge{
+      font-size:12px;
+      font-weight:700;
+      opacity:0.92;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.30);
+      border: 1px solid rgba(0,0,0,0.08);
+      color:#032030;
+      white-space:nowrap;
+    }
+    .hint{
+      font-size:13px;
+      opacity:0.85;
+      margin:0;
+      color:#032030;
+      line-height: 1.35;
+    }
+
+    /* LEVEL SELECT */
+    .selectWrap{
+      flex: 1;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      justify-content:center;
+      align-items:stretch;
+    }
+    .selectCard{
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius:16px;
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      color:#032030;
+    }
+    .selectTitle{
+      font-weight:900;
+      font-size:16px;
+    }
+    .selectSub{
+      font-size:12px;
+      opacity:0.8;
+      margin-top:2px;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.08);
+      color:#032030;
+      white-space:nowrap;
+    }
+    .locked{ opacity:0.75; }
+    .selectBtn{
+      width:100%;
+      border-radius:16px;
+      padding:0;
+      background: transparent;
+      color: inherit;
+      border: 0;
+      text-align: left;
+    }
+
+    /* Chest area */
+    .chestZone{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      align-self: center;
+      width: 100%;
+    }
+    .chestBtn{
+      width: 210px;
+      height: 210px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(0,0,0,0.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+    .chestBtn:disabled{
+      cursor:not-allowed;
+      opacity:0.7;
+    }
+    .chestBtn img{
+      width: 250px;
+      height: auto;
+      object-fit: contain;
+      user-select:none;
+      -webkit-user-drag:none;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+    }
+    .chestHint{
+      font-size: 12px;
+      color:#032030;
+      opacity:0.85;
+      text-align:center;
+      max-width: 280px;
+      line-height:1.4;
+    }
+
+    /* MAZE board */
+    .boardWrap{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .board{
+      width: min(420px, 100%);
+      aspect-ratio: 1/1;
+      background: #90e0ef;
+      border: 1px solid #0077b6;
+      border-radius:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .tile{
+      position:absolute;
+      border-radius:10px;
+    }
+    .wall{
+      background: #caf0f8;
+      border: 1px solid #caf0f8;
+    }
+
+    .sprite{
+      position:absolute;
+      width: 50px;
+      height: 50px;
+      transform: translate(-50%, -50%);
+      user-select:none;
+      -webkit-user-drag:none;
+      z-index: 2;
+    }
+    .sprite img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* POPUP */
+    .popup{
+      position:absolute;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: rgba(0,0,0,0.55);
+      padding:18px;
+      box-sizing:border-box;
+      z-index: 50;
+    }
+    .popupCard{
+      width: 100%;
+      max-width: 360px;
+      background: rgba(20,20,24,0.95);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius:18px;
+      padding:16px;
+      text-align:center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+      animation: popIn 260ms ease-out;
+      transform-origin: center;
+    }
+    @keyframes popIn{
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .popupTitle{
+      font-weight:900;
+      font-size:18px;
+      margin: 6px 0 6px;
+      color: #fff;
+    }
+    .popupText{
+      opacity:0.85;
+      font-size:14px;
+      margin: 0 0 14px;
+      line-height:1.5;
+      color:#fff;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .winChars{
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .winChar{
+      height: 150px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.35));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+    .winLetterRow{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      margin: 6px 0 10px;
+    }
+    .mutedText{
+      opacity:0.8;
+      font-size:14px;
+      color:#fff;
+    }
+    .winLetter{
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,0.3));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* =============================
+       LEVEL 2 (Crossword)  (your current)
+       ============================= */
+    .level2Layout{
+      flex: 1;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-height: 0;
+    }
+    .crossWrap{
+      flex: 1;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      min-height: 0;
+    }
+    .crossBoard{
+      width: 100%;
+      aspect-ratio: 17/15 ;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 18px;
+      padding: 16px;
+      box-sizing:border-box;
+      display:grid;
+      grid-template-columns: repeat(17, 1fr);
+      gap: 4px;
+      align-self: stretch;
+    }
+    .cell{
+      border-radius: 0px;
+      background: rgba(255,255,255,0.22);
+      border: 1px solid rgba(0,0,0,0.08);
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .cell.block{
+      background: rgba(0,0,0,0.12);
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    #level2 .cell input{
+      width:100%;
+      height:100%;
+      border:0;
+      outline:none;
+      background: transparent;
+      text-align:center;
+      font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      color:#083f5e;
+      text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      caret-color: #0077b6;
+    }
+    .cell:focus-within{
+      outline: 3px solid rgba(0,119,182,0.35);
+      outline-offset: -3px;
+      background: rgba(255,255,255,0.35);
+    }
+    .cell .num{
+      position:absolute;
+      top:4px;
+      left:6px;
+      font-size:11px;
+      font-weight:900;
+      opacity:0.75;
+      color:#032030;
+      pointer-events:none;
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+    .cell.filled .num{ opacity: 0; transform: translateY(-2px); }
+    .cell.highlight{
+      background: rgba(200, 170, 255, 0.55);
+      border: none;
+      box-shadow: inset 0 0 0 1px rgba(140, 90, 220, 0.25);
+    }
+    #level2 .cell.highlight input{ color:#6d28d9; }
+    #level2 .cell.persistWrong input{ color:#7a0f2b; }
+    #level2 .cell.highlight.persistWrong input{ color:#6d28d9; }
+    .cell.checkGood{ background: rgba(34, 197, 94, 0.25); }
+    .cell.checkBad{ background: rgba(239, 68, 68, 0.22); }
+    .cell.highlight.checkGood,
+    .cell.highlight.checkBad{
+      background: rgba(200, 170, 255, 0.55);
+      border: none;
+      box-shadow: inset 0 0 0 1px rgba(140, 90, 220, 0.25);
+    }
+    .smallBtnRow{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 2px;
+    }
+    .checkPanel{
+      width: 100%;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 18px;
+      padding: 10px;
+      box-sizing: border-box;
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .checkPanel button{
+      flex: 1;
+      min-width: 120px;
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .cluesSection{
+      width: 100%;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .clueBox{
+      width: 100%;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 18px;
+      padding: 14px;
+      color:#032030;
+      box-sizing:border-box;
+    }
+    .clueTitle{
+      font-weight:900;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #032030;
+    }
+    .clue{
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 8px 0;
+      opacity: 0.95;
+      color: #032030;
+    }
+    #level2{
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #level2 .level2Layout{ padding-bottom: 18px; }
+
+    /* =============================
+       LEVEL 3 (Find D) — FULL SCREEN IMAGE
+       ============================= */
+    #level3{
+      padding:0;
+      gap:0;
+      background:#add8e6;
+    }
+
+    .waldoFull{
+      position: absolute;
+      inset: 0;
+      background:#add8e6;
+      overflow:hidden;
+    }
+
+    .waldoImg{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      user-select:none;
+      -webkit-user-drag:none;
+      transform-origin:center;
+    }
+
+    .waldoHUD{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      z-index: 20;
+      pointer-events:none;
+    }
+    .waldoHUD .left,
+    .waldoHUD .right{ display:flex; align-items:center; gap:10px; }
+    .waldoHUD .left{ flex:1; }
+    .waldoMsg{
+      pointer-events:none;
+      font-weight:900;
+      font-size:12px;
+      color:#032030;
+      background: rgba(255,255,255,0.55);
+      border:1px solid rgba(0,0,0,0.08);
+      padding:8px 10px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      max-width: 290px;
+    }
+    .waldoMsg img{
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12));
+    }
+
+    .hudBtn{
+      pointer-events:auto;
+      border-radius:999px;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:900;
+      background: rgba(255,255,255,0.55);
+      border:1px solid rgba(0,0,0,0.10);
+      color:#032030;
+    }
+    .hudBtn:active{ transform: translateY(1px); }
+
+    .hitbox{
+      position:absolute;
+      background: transparent;
+      border:0;
+      padding:0;
+      cursor:pointer;
+      z-index: 5;
+    }
+    /* .hitbox{ outline:2px dashed rgba(255,0,0,0.9); background: rgba(255,0,0,0.12); } */
+
+    .waldoFull.shake{ animation: shake 220ms ease-in-out; }
+    @keyframes shake{
+      0%{ transform: translateX(0); }
+      20%{ transform: translateX(-6px); }
+      40%{ transform: translateX(6px); }
+      60%{ transform: translateX(-4px); }
+      80%{ transform: translateX(4px); }
+      100%{ transform: translateX(0); }
+    }
+    .toast{
+      position:absolute;
+      left:50%;
+      bottom:14px;
+      transform: translateX(-50%);
+      background: rgba(20,20,24,0.88);
+      border: 1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      animation: toastIn 650ms ease-out forwards;
+      pointer-events:none;
+      z-index: 30;
+    }
+    @keyframes toastIn{
+      0%{ opacity:0; transform: translateX(-50%) translateY(6px); }
+      15%{ opacity:1; transform: translateX(-50%) translateY(0); }
+      100%{ opacity:0; transform: translateX(-50%) translateY(-6px); }
+    }
+
+    .waldoFull.zoom .waldoImg{ animation: zoomIn 420ms ease-out forwards; }
+    @keyframes zoomIn{
+      from{ transform: scale(1); }
+      to{ transform: scale(1.06); }
+    }
+    .sparkles{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,255,255,0.9), transparent 35%),
+        radial-gradient(circle at 70% 55%, rgba(255,255,255,0.9), transparent 35%),
+        radial-gradient(circle at 55% 25%, rgba(255,255,255,0.9), transparent 35%);
+      mix-blend-mode: screen;
+      animation: sparkle 650ms ease-out forwards;
+      z-index: 25;
+    }
+    @keyframes sparkle{
+      0%{ opacity: 0; transform: scale(0.98); filter: blur(1px); }
+      30%{ opacity: 1; }
+      100%{ opacity: 0; transform: scale(1.04); filter: blur(0px); }
+    }
+
+    .hintCard{
+      width: 100%;
+      max-width: 360px;
+      background: rgba(20,20,24,0.95);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+      animation: popIn 260ms ease-out;
+    }
+    .hintImg{
+      width: 210px;
+      height: auto;
+      border-radius:14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      display:block;
+      margin: 0 auto 10px;
+    }
+
+    .solutionRing{
+      position:absolute;
+      border-radius: 999px;
+      border: 4px solid rgba(255, 60, 140, 0.95);
+      box-shadow: 0 0 0 6px rgba(255, 60, 140, 0.18);
+      pointer-events:none;
+      z-index: 40;
+      animation: ringPop 220ms ease-out;
+    }
+    @keyframes ringPop{
+      from{ transform: scale(0.85); opacity:0; }
+      to{ transform: scale(1); opacity:1; }
+    }
+
+    /* =============================
+       CHEST CODE POPUP
+       ============================= */
+    .codeRow{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin: 8px 0 6px;
+    }
+    .codeCell{
+      width: 56px;
+      height: 62px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color:#fff;
+      font-size: 28px;
+      font-weight: 900;
+      text-align:center;
+      outline:none;
+      text-transform: uppercase;
+    }
+    .codeCell:focus{
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.16);
+    }
+    .nopeText{
+      margin-top: 6px;
+      font-weight: 800;
+      opacity: 0.9;
+      color:#fff;
+    }
+    @keyframes tinyShake{
+      0%{ transform: translateX(0); }
+      20%{ transform: translateX(-5px); }
+      40%{ transform: translateX(5px); }
+      60%{ transform: translateX(-4px); }
+      80%{ transform: translateX(4px); }
+      100%{ transform: translateX(0); }
+    }
+    .shake{
+      animation: tinyShake 240ms ease-in-out;
+    }
+
+    /* =============================
+       GIFT 2 – LOVE LETTER ANIMATION
+       ============================= */
+    .letterStage{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      text-align:center;
+    }
+
+    .letter{
+      width: 240px;
+      height: auto;
+      cursor: pointer;
+      user-select:none;
+      -webkit-user-drag:none;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,0.35));
+      transition:
+        transform 420ms cubic-bezier(.22,1,.36,1),
+        opacity 280ms ease;
+    }
+
+    .letter.closed{
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .letter.opening{
+      transform: scale(1.08) rotate(-2deg);
+    }
+
+    .letter.open{
+      animation: none;
+      transform: scale(1);
+    }
+
+    .tapHint{
+      font-size:13px;
+      opacity:0.85;
+      animation: pulse 1.8s ease-in-out infinite;
+      color:#032030;
+    }
+
+    @keyframes float{
+      0%{ transform: translateY(0); }
+      50%{ transform: translateY(-6px); }
+      100%{ transform: translateY(0); }
+    }
+
+    @keyframes pulse{
+      0%{ opacity:0.5; }
+      50%{ opacity:1; }
+      100%{ opacity:0.5; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="game">
+
+    <!-- COVER SCREEN -->
+    <div class="cover" id="cover">
+      <div class="overlay"></div>
+      <div class="coverContent">
+        <div class="subtitle">Joyeux Anniversaire Conasse</div>
+        <button id="startBtn">▶ Press Start</button>
+      </div>
+    </div>
+
+    <!-- LEVEL SELECT SCREEN -->
+    <div class="level hidden" id="levelSelect">
+      <div class="topBar">
+        <div class="badge">Choose a level</div>
+        <button class="secondary" id="backToCover">←</button>
+      </div>
+
+      <div class="selectWrap">
+        <button class="selectBtn" id="level1Btn">
+          <div class="selectCard">
+            <div>
+              <div class="selectTitle">Level 1</div>
+              <div class="selectSub">Maze — reach me to collect the letter</div>
+            </div>
+            <div class="pill" id="lvl1Status">PLAY</div>
+          </div>
+        </button>
+
+        <button class="selectBtn" id="level2Btn">
+          <div class="selectCard" id="level2Card">
+            <div>
+              <div class="selectTitle" id="lvl2Title">🔒 Level 2</div>
+              <div class="selectSub" id="lvl2Sub">Locked for now</div>
+            </div>
+            <div class="pill" id="lvl2Status">LOCKED</div>
+          </div>
+        </button>
+
+        <button class="selectBtn" id="level3Btn">
+          <div class="selectCard" id="level3Card">
+            <div>
+              <div class="selectTitle" id="lvl3Title">🔒 Level 3</div>
+              <div class="selectSub" id="lvl3Sub">Locked for now</div>
+            </div>
+            <div class="pill" id="lvl3Status">LOCKED</div>
+          </div>
+        </button>
+
+        <div class="chestZone">
+          <button class="chestBtn" id="chestBtn" disabled title="Locked for now">
+            <img id="chestImg" src="art/chest_closed.png" alt="chest">
+          </button>
+          <div class="chestHint" id="chestHint">
+            🔒 Final chest is locked. Collect all letters to unlock the code.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 1: MAZE -->
+    <div class="level hidden" id="level1">
+      <div class="topBar">
+        <div class="badge">Level 1 • Find the letter</div>
+        <button class="secondary" id="backBtn1">←</button>
+      </div>
+      <p class="hint">Come get me</p>
+
+      <div class="boardWrap">
+        <div class="board" id="board">
+          <div class="sprite" id="goal">
+            <img src="art/guide_with_letter.png" alt="goal">
+          </div>
+          <div class="sprite" id="player">
+            <img src="art/player_stand.png" alt="player">
+          </div>
+
+          <div class="popup hidden" id="winPopup1">
+            <div class="popupCard">
+              <div class="winChars">
+                <img class="winChar" src="art/player_stand.png" alt="him">
+                <img class="winChar" src="art/guide_with_letter.png" alt="you">
+              </div>
+              <div class="popupTitle">You found the letter</div>
+              <div class="winLetterRow">
+                <span class="mutedText">Letter:</span>
+                <img class="winLetter" src="art/letter_h.png" alt="H">
+              </div>
+              <div class="popupText">Good job loser</div>
+              <div class="row">
+                <button id="openGift1">Open Gift 1</button>
+                <button class="secondary" id="backToLevelsFromWin1">Back to levels</button>
+                <button class="secondary" id="replay1">Replay</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- GIFT 1 PLACEHOLDER -->
+    <div class="level hidden" id="gift1">
+      <div class="topBar">
+        <div class="badge">Gift 1</div>
+        <button class="secondary" id="backToLevelsFromGift1">←</button>
+      </div>
+      <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
+        <p class="hint">Gift 1 content goes here 💗</p>
+      </div>
+    </div>
+
+    <!-- LEVEL 2: CROSSWORD -->
+    <div class="level hidden" id="level2">
+      <div class="topBar">
+        <div class="badge">Level 2 • Crossword</div>
+        <button class="secondary" id="backBtn2">←</button>
+      </div>
+      <p class="hint">Fill the crossword. The highlighted square reveals the letter </p>
+
+      <div class="level2Layout">
+        <div class="crossWrap">
+          <div class="crossBoard" id="crossBoard"></div>
+
+          <div class="smallBtnRow">
+            <button class="secondary" id="resetCross">Reset</button>
+            <button id="checkCross">Check</button>
+          </div>
+
+          <div class="checkPanel hidden" id="checkPanel">
+            <button id="checkWordBtn">Check word</button>
+            <button id="checkLetterBtn">Check letter</button>
+            <button id="checkAllBtn">Check all</button>
+          </div>
+
+          <div class="cluesSection">
+            <div class="clueBox">
+              <div class="clueTitle">Across</div>
+              <div class="clue">1. What happened 21 years ago</div>
+              <div class="clue">2. Marie-Laure</div>
+              <div class="clue">3. Colour of my eyes</div>
+              <div class="clue">4. My favorite thing about you</div>
+              <div class="clue">5. Most iconic sex</div>
+              <div class="clue">6. What you did in your pants</div>
+              <div class="clue">7. My favourite colour</div>
+              <div class="clue">8. What I did in bed</div>
+            </div>
+
+            <div class="clueBox">
+              <div class="clueTitle">Down</div>
+              <div class="clue">1. What I'm missing 6 of</div>
+              <div class="clue">2. Most used word in our chat</div>
+              <div class="clue">3. The funniest person you know</div>
+              <div class="clue">4. You</div>
+              <div class="clue">5. Our first date</div>
+              <div class="clue">6. Best outfit</div>
+              <div class="clue">7. Our first non-home country trip</div>
+              <div class="clue">8. My favourite flower</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup hidden" id="winPopup2">
+        <div class="popupCard">
+          <div class="winChars">
+            <img class="winChar" src="art/player_stand.png" alt="him">
+            <img class="winChar" src="art/guide_with_b.png" alt="you with B">
+          </div>
+          <div class="popupTitle">You found the letter</div>
+          <div class="winLetterRow">
+            <span class="mutedText">Letter:</span>
+            <img class="winLetter" src="art/letter_b.png" alt="B">
+          </div>
+          <div class="popupText">Good job loser</div>
+          <div class="row">
+            <button id="openGift2">Open Gift 2</button>
+            <button class="secondary" id="backToLevelsFromWin2">Back to levels</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIFT 2: LOVE LETTER (UPDATED) -->
+    <div class="level hidden" id="gift2">
+      <div class="topBar">
+        <div class="badge">Gift 2</div>
+        <button class="secondary" id="backToLevelsFromGift2">←</button>
+      </div>
+
+      <div class="letterStage">
+        <img
+          id="letterImg"
+          src="art/letter_closed.png"
+          alt="Love letter"
+          class="letter closed"
+        />
+        <p class="tapHint" id="tapHint">Tap to open 💌</p>
+      </div>
+    </div>
+
+    <!-- LEVEL 3: FULL SCREEN FIND D -->
+    <div class="level hidden" id="level3">
+      <div class="waldoFull" id="waldoFull">
+        <img class="waldoImg" id="waldoImg" src="art/game3.png" alt="Find D">
+
+        <button class="hitbox" id="hitboxD" aria-label="Correct D"></button>
+
+        <div class="solutionRing hidden" id="solutionRing"></div>
+        <div class="sparkles hidden" id="sparkles"></div>
+        <div class="toast hidden" id="toast">Loser</div>
+
+        <div class="waldoHUD">
+          <div class="left">
+            <div class="waldoMsg">
+              <span>Find the letter</span>
+              <img src="art/letter_d.png" alt="D">
+            </div>
+          </div>
+
+          <div class="right">
+            <button class="hudBtn" id="hintBtn">Hint</button>
+            <button class="hudBtn" id="solutionBtn">Solution</button>
+            <button class="hudBtn" id="backBtn3">←</button>
+          </div>
+        </div>
+
+        <div class="popup hidden" id="hintPopup">
+          <div class="hintCard">
+            <div class="popupTitle">Hint</div>
+            <div class="popupText">Look for me holding it.</div>
+            <img class="hintImg" src="art/guide_with_d.png" alt="hint">
+            <div class="row">
+              <button id="closeHint">Ok</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="popup hidden" id="winPopup3">
+          <div class="popupCard">
+            <div class="winChars">
+              <img class="winChar" src="art/player_stand.png" alt="him">
+              <img class="winChar" src="art/guide_with_d.png" alt="you with D">
+            </div>
+
+            <div class="popupTitle">You found the letter</div>
+
+            <div class="winLetterRow">
+              <span class="mutedText">Letter:</span>
+              <img class="winLetter" src="art/letter_d.png" alt="D">
+            </div>
+
+            <div class="popupText">Good job loser</div>
+
+            <div class="row">
+              <button id="openGift3">Open Gift 3</button>
+              <button class="secondary" id="backToLevelsFromWin3">Back to levels</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- GIFT 3 PLACEHOLDER -->
+    <div class="level hidden" id="gift3">
+      <div class="topBar">
+        <div class="badge">Gift 3</div>
+        <button class="secondary" id="backToLevelsFromGift3">←</button>
+      </div>
+      <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
+        <p class="hint">Gift 3 content goes here 💗</p>
+      </div>
+    </div>
+
+    <!-- CHEST CODE POPUP -->
+    <div class="popup hidden" id="chestPopup">
+      <div class="popupCard">
+        <div class="popupTitle">Enter the code</div>
+        <div class="popupText">One letter per box</div>
+
+        <div class="codeRow" id="codeRow">
+          <input class="codeCell" id="code1" maxlength="1" inputmode="text" autocomplete="off" />
+          <input class="codeCell" id="code2" maxlength="1" inputmode="text" autocomplete="off" />
+          <input class="codeCell" id="code3" maxlength="1" inputmode="text" autocomplete="off" />
+        </div>
+
+        <div class="nopeText hidden" id="codeNope">Loser you're wrong</div>
+
+        <div class="row" style="margin-top:12px;">
+          <button id="submitCode">Unlock</button>
+          <button class="secondary" id="closeChestPopup">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL REWARD SCREEN -->
+    <div class="level hidden" id="finalReward">
+      <div class="topBar">
+        <div class="badge">Reward 🎁</div>
+        <button class="secondary" id="backToLevelsFromReward">←</button>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px;">
+        <p class="hint">Your final reward goes here 💗</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // =============================
+    // Screen switching
+    // =============================
+    const cover = document.getElementById("cover");
+    const levelSelect = document.getElementById("levelSelect");
+    const level1 = document.getElementById("level1");
+    const gift1 = document.getElementById("gift1");
+    const level2 = document.getElementById("level2");
+    const gift2 = document.getElementById("gift2");
+    const level3 = document.getElementById("level3");
+    const gift3 = document.getElementById("gift3");
+    const finalReward = document.getElementById("finalReward");
+
+    const startBtn = document.getElementById("startBtn");
+    const backToCover = document.getElementById("backToCover");
+
+    const level1Btn = document.getElementById("level1Btn");
+    const level2Btn = document.getElementById("level2Btn");
+    const level3Btn = document.getElementById("level3Btn");
+
+    const backBtn1 = document.getElementById("backBtn1");
+    const backBtn2 = document.getElementById("backBtn2");
+    const backBtn3 = document.getElementById("backBtn3");
+
+    const openGift1 = document.getElementById("openGift1");
+    const backToLevelsFromWin1 = document.getElementById("backToLevelsFromWin1");
+    const backToLevelsFromGift1 = document.getElementById("backToLevelsFromGift1");
+
+    const openGift2 = document.getElementById("openGift2");
+    const backToLevelsFromWin2 = document.getElementById("backToLevelsFromWin2");
+    const backToLevelsFromGift2 = document.getElementById("backToLevelsFromGift2");
+
+    const openGift3 = document.getElementById("openGift3");
+    const backToLevelsFromWin3 = document.getElementById("backToLevelsFromWin3");
+    const backToLevelsFromGift3 = document.getElementById("backToLevelsFromGift3");
+
+    const backToLevelsFromReward = document.getElementById("backToLevelsFromReward");
+
+    // Level select UI bits
+    const lvl1Status = document.getElementById("lvl1Status");
+    const lvl2Status = document.getElementById("lvl2Status");
+    const lvl2Title = document.getElementById("lvl2Title");
+    const lvl2Sub = document.getElementById("lvl2Sub");
+    const level2Card = document.getElementById("level2Card");
+
+    const lvl3Status = document.getElementById("lvl3Status");
+    const lvl3Title = document.getElementById("lvl3Title");
+    const lvl3Sub = document.getElementById("lvl3Sub");
+    const level3Card = document.getElementById("level3Card");
+
+    // Chest
+    const chestBtn = document.getElementById("chestBtn");
+    const chestImg = document.getElementById("chestImg");
+    const chestHint = document.getElementById("chestHint");
+
+    // Chest popup + inputs
+    const chestPopup = document.getElementById("chestPopup");
+    const codeRow = document.getElementById("codeRow");
+    const code1 = document.getElementById("code1");
+    const code2 = document.getElementById("code2");
+    const code3 = document.getElementById("code3");
+    const submitCode = document.getElementById("submitCode");
+    const closeChestPopup = document.getElementById("closeChestPopup");
+    const codeNope = document.getElementById("codeNope");
+
+    // Progress state
+    let level1Complete = false;
+    let level2Complete = false;
+    let level3Complete = false;
+
+    let chestUnlocked = false;
+    const CHEST_CODE = "HBD"; // <-- change code here if you want
+
+    function showScreen(screen) {
+      cover.classList.add("hidden");
+      levelSelect.classList.add("hidden");
+      level1.classList.add("hidden");
+      gift1.classList.add("hidden");
+      level2.classList.add("hidden");
+      gift2.classList.add("hidden");
+      level3.classList.add("hidden");
+      gift3.classList.add("hidden");
+      finalReward.classList.add("hidden");
+      screen.classList.remove("hidden");
+    }
+
+    function updateSelectUI() {
+      lvl1Status.textContent = level1Complete ? "DONE ✓" : "PLAY";
+
+      const lvl2Unlocked = level1Complete;
+      level2Btn.disabled = !lvl2Unlocked;
+      if (!lvl2Unlocked) {
+        lvl2Title.textContent = "🔒 Level 2";
+        lvl2Sub.textContent = "Locked for now";
+        lvl2Status.textContent = "LOCKED";
+        level2Card.classList.add("locked");
+      } else {
+        lvl2Title.textContent = "Level 2";
+        lvl2Sub.textContent = "Crossword — reveal the letter";
+        lvl2Status.textContent = level2Complete ? "DONE ✓" : "PLAY";
+        level2Card.classList.remove("locked");
+      }
+
+      const lvl3Unlocked = level2Complete;
+      level3Btn.disabled = !lvl3Unlocked;
+      if (!lvl3Unlocked) {
+        lvl3Title.textContent = "🔒 Level 3";
+        lvl3Sub.textContent = "Locked for now";
+        lvl3Status.textContent = "LOCKED";
+        level3Card.classList.add("locked");
+      } else {
+        lvl3Title.textContent = "Level 3";
+        lvl3Sub.textContent = "Find the letter";
+        lvl3Status.textContent = level3Complete ? "DONE ✓" : "PLAY";
+        level3Card.classList.remove("locked");
+      }
+
+      // CHEST unlock logic
+      const allLevelsDone = level1Complete && level2Complete && level3Complete;
+      chestBtn.disabled = !allLevelsDone;
+
+      if (!allLevelsDone) {
+        chestImg.src = "art/chest_closed.png";
+        chestHint.textContent = "🔒 Final chest is locked. Collect all letters to unlock the code.";
+      } else if (!chestUnlocked) {
+        chestImg.src = "art/chest_closed.png";
+        chestHint.textContent = "🔓 Chest unlocked! Tap it and enter the 3-letter code";
+      } else {
+        chestImg.src = "art/chest_open.png";
+        chestHint.textContent = "🎁 Chest opened! Tap to open your reward";
+      }
+    }
+
+    startBtn.addEventListener("click", () => {
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+    backToCover.addEventListener("click", () => showScreen(cover));
+
+    level1Btn.addEventListener("click", () => {
+      showScreen(level1);
+      requestAnimationFrame(() => {
+        renderWalls();
+        placeSprites();
+      });
+    });
+
+    level2Btn.addEventListener("click", () => {
+      if (!level1Complete) return;
+      showScreen(level2);
+      requestAnimationFrame(() => {
+        buildCrossword();
+        focusFirstCrossCell();
+      });
+    });
+
+    level3Btn.addEventListener("click", () => {
+      if (!level2Complete) return;
+      showScreen(level3);
+      requestAnimationFrame(() => {
+        applyHitboxFromConfig();
+        hideSolutionRing();
+      });
+    });
+
+    backBtn1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backBtn2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backBtn3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+
+    backToLevelsFromGift1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromGift2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromGift3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+
+    backToLevelsFromReward.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+
+    // =============================
+    // Level 1 Maze
+    // =============================
+    const GRID = [
+      [0,0,1,0,1,1,1,0,0,1],
+      [1,0,1,0,1,0,1,1,0,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,1,1,0,1,1,0,1,0,1],
+      [0,0,0,0,0,1,0,1,0,1],
+      [0,1,1,1,0,1,0,1,0,1],
+      [0,1,0,0,0,0,0,1,0,1],
+      [0,1,0,1,1,1,0,1,0,1],
+      [0,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,0,0],
+    ];
+    const rows = GRID.length;
+    const cols = GRID[0].length;
+
+    const board = document.getElementById("board");
+    const player = document.getElementById("player");
+    const goal = document.getElementById("goal");
+
+    const winPopup1 = document.getElementById("winPopup1");
+    const replay1 = document.getElementById("replay1");
+
+    let px = 0, py = 0;
+    const gx = 9, gy = 9;
+
+    function renderWalls() {
+      board.querySelectorAll(".tile.wall").forEach(e => e.remove());
+
+      const rect = board.getBoundingClientRect();
+      const tileW = rect.width / cols;
+      const tileH = rect.height / rows;
+
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (GRID[y][x] === 1) {
+            const w = document.createElement("div");
+            w.className = "tile wall";
+            w.style.left = (x * tileW) + "px";
+            w.style.top = (y * tileH) + "px";
+            w.style.width = tileW + "px";
+            w.style.height = tileH + "px";
+            board.appendChild(w);
+          }
+        }
+      }
+    }
+
+    function placeSprites() {
+      const rect = board.getBoundingClientRect();
+      const tileW = rect.width / cols;
+      const tileH = rect.height / rows;
+
+      const toCenterX = (x) => x * tileW + tileW/2;
+      const toCenterY = (y) => y * tileH + tileH/2;
+
+      player.style.left = toCenterX(px) + "px";
+      player.style.top  = toCenterY(py) + "px";
+
+      goal.style.left = toCenterX(gx) + "px";
+      goal.style.top  = toCenterY(gy) + "px";
+    }
+
+    function canMove(nx, ny) {
+      if (nx < 0 || ny < 0 || nx >= cols || ny >= rows) return false;
+      return GRID[ny][nx] === 0;
+    }
+
+    function checkWin1() {
+      if (px === gx && py === gy) {
+        level1Complete = true;
+        winPopup1.classList.remove("hidden");
+      }
+    }
+
+    function resetLevel1() {
+      px = 0; py = 0;
+      winPopup1.classList.add("hidden");
+      renderWalls();
+      placeSprites();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (level1.classList.contains("hidden")) return;
+      if (!winPopup1.classList.contains("hidden")) return;
+
+      let dx = 0, dy = 0;
+      const k = e.key.toLowerCase();
+
+      if (k === "arrowup" || k === "w") dy = -1;
+      if (k === "arrowdown" || k === "s") dy = 1;
+      if (k === "arrowleft" || k === "a") dx = -1;
+      if (k === "arrowright" || k === "d") dx = 1;
+
+      if (dx === 0 && dy === 0) return;
+      e.preventDefault();
+
+      const nx = px + dx;
+      const ny = py + dy;
+
+      if (canMove(nx, ny)) {
+        px = nx; py = ny;
+        placeSprites();
+        checkWin1();
+      }
+    }, { passive:false });
+
+    replay1.addEventListener("click", resetLevel1);
+
+    openGift1.addEventListener("click", () => {
+      winPopup1.classList.add("hidden");
+      showScreen(gift1);
+    });
+
+    backToLevelsFromWin1.addEventListener("click", () => {
+      winPopup1.classList.add("hidden");
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
+    window.addEventListener("resize", () => {
+      if (!level1.classList.contains("hidden")) {
+        renderWalls();
+        placeSprites();
+      }
+      if (!level3.classList.contains("hidden")) {
+        applyHitboxFromConfig();
+      }
+    });
+
+    // =============================
+    // Level 2 Crossword (your current JS)
+    // =============================
+    const crossBoard = document.getElementById("crossBoard");
+    const winPopup2 = document.getElementById("winPopup2");
+    const resetCross = document.getElementById("resetCross");
+    const checkCross = document.getElementById("checkCross");
+
+    const checkPanel = document.getElementById("checkPanel");
+    const checkWordBtn = document.getElementById("checkWordBtn");
+    const checkLetterBtn = document.getElementById("checkLetterBtn");
+    const checkAllBtn = document.getElementById("checkAllBtn");
+
+    const W = 17, H = 15;
+    const grid = Array.from({length: H}, () => Array.from({length: W}, () => null));
+
+    function placeAcross(row, col, word, num=null) {
+      for (let i=0; i<word.length; i++){
+        const ch = word[i];
+        const cell = grid[row][col+i] || { ch };
+        cell.ch = ch;
+        if (i === 0 && num) {
+          if (cell.num == null) cell.num = num;
+        }
+        grid[row][col+i] = cell;
+      }
+    }
+    function placeDown(row, col, word, num=null, highlightIndex=null) {
+      for (let i=0; i<word.length; i++){
+        const ch = word[i];
+        const cell = grid[row+i][col] || { ch };
+        cell.ch = ch;
+        if (i === 0 && num) {
+          if (cell.num == null) cell.num = num;
+        }
+        if (highlightIndex !== null && i === highlightIndex) cell.highlight = true;
+        grid[row+i][col] = cell;
+      }
+    }
+
+    placeAcross(6, 2, "BIRTH", 1);
+    placeAcross(10, 3, "BAHOUAIS", 2);
+    placeAcross(14, 3, "HAZEL", 3);
+    placeAcross(12, 9, "DICK", 4);
+    placeAcross(8, 10, "SEINE", 5);
+    placeAcross(5, 8, "CACA", 6);
+    placeAcross(3, 11, "PURPLE", 7);
+    placeAcross(11, 0, "PIPI", 8);
+
+    placeDown(6, 5, "TEETH", 1);
+    placeDown(10, 3, "BITCH", 2, 0);
+    placeDown(9, 7, "LUNA", 3);
+    placeDown(3, 14, "POOKIE", 4);
+    placeDown(8, 10, "SUSHI", 5);
+    placeDown(10, 12, "NAKED", 6);
+    placeDown(3, 11, "PRAGUE", 7);
+    placeDown(0, 3, "WISTERIA", 8);
+
+    let inputRefs = [];
+    let activeDir = "across";
+    let activeInput = null;
+
+    function getInputAt(r, c) {
+      return inputRefs.find(x => Number(x.dataset.r) === r && Number(x.dataset.c) === c) || null;
+    }
+    function cellElOf(inp) { return inp?.parentElement || null; }
+    function updateNumberVisibility(inp) {
+      const cell = cellElOf(inp);
+      const hasLetter = (inp.value || "").trim().length > 0;
+      cell.classList.toggle("filled", hasLetter);
+    }
+    function clearCheckedStateForInput(inp) {
+      const cell = cellElOf(inp);
+      cell.dataset.checked = "0";
+      cell.dataset.checkedWrong = "0";
+      cell.classList.remove("persistWrong");
+      cell.classList.remove("checkGood","checkBad");
+    }
+    function recomputePersistWrong(inp) {
+      const cell = cellElOf(inp);
+      const expected = (inp.dataset.expected || "").toUpperCase();
+      const got = (inp.value || "").toUpperCase();
+      const wasCheckedWrong = cell.dataset.checkedWrong === "1";
+      const stillWrong = got !== "" && got !== expected;
+      cell.classList.toggle("persistWrong", wasCheckedWrong && stillWrong);
+    }
+    function clearCheckPaintAll() {
+      inputRefs.forEach(inp => cellElOf(inp).classList.remove("checkGood","checkBad"));
+    }
+    function getWordInputsFrom(inp, dir) {
+      if (!inp) return [];
+      const r0 = Number(inp.dataset.r);
+      const c0 = Number(inp.dataset.c);
+      const dr = dir === "down" ? 1 : 0;
+      const dc = dir === "across" ? 1 : 0;
+      let r = r0, c = c0;
+      while (true) {
+        const pr = r - dr, pc = c - dc;
+        if (pr < 0 || pc < 0 || pr >= H || pc >= W) break;
+        if (!grid[pr][pc]) break;
+        r = pr; c = pc;
+      }
+      const out = [];
+      while (r >= 0 && c >= 0 && r < H && c < W && grid[r][c]) {
+        const it = getInputAt(r, c);
+        if (it) out.push(it);
+        r += dr; c += dc;
+      }
+      return out;
+    }
+    function checkInputs(list) {
+      list.forEach(inp => {
+        const cell = cellElOf(inp);
+        const expected = (inp.dataset.expected || "").toUpperCase();
+        const got = (inp.value || "").toUpperCase();
+        cell.classList.remove("checkGood","checkBad");
+        cell.dataset.checked = "1";
+        if (got !== "" && got === expected) {
+          cell.classList.add("checkGood");
+          cell.dataset.checkedWrong = "0";
+          cell.classList.remove("persistWrong");
+        } else {
+          cell.classList.add("checkBad");
+          cell.dataset.checkedWrong = (got !== "" && got !== expected) ? "1" : "0";
+        }
+      });
+    }
+    function closeCheckPanel() {
+      checkPanel.classList.add("hidden");
+      checkCross.textContent = "Check";
+      clearCheckPaintAll();
+      inputRefs.forEach(recomputePersistWrong);
+    }
+    function openCheckPanel() {
+      checkPanel.classList.remove("hidden");
+      checkCross.textContent = "Close";
+      clearCheckPaintAll();
+    }
+    function toggleCheckPanel() {
+      if (!checkPanel.classList.contains("hidden")) closeCheckPanel();
+      else openCheckPanel();
+    }
+    function nextInDir(inp, dir) {
+      const r = Number(inp.dataset.r), c = Number(inp.dataset.c);
+      if (dir === "across") return (c+1 < W && grid[r][c+1]) ? getInputAt(r, c+1) : null;
+      return (r+1 < H && grid[r+1][c]) ? getInputAt(r+1, c) : null;
+    }
+    function prevInDir(inp, dir) {
+      const r = Number(inp.dataset.r), c = Number(inp.dataset.c);
+      if (dir === "across") return (c-1 >= 0 && grid[r][c-1]) ? getInputAt(r, c-1) : null;
+      return (r-1 >= 0 && grid[r-1][c]) ? getInputAt(r-1, c) : null;
+    }
+    function autoMoveNext(inp) {
+      if (!inp.value) return;
+      const next = nextInDir(inp, activeDir);
+      if (next) next.focus();
+    }
+
+    function buildCrossword() {
+      crossBoard.innerHTML = "";
+      inputRefs = [];
+      activeInput = null;
+
+      for (let r=0; r<H; r++){
+        for (let c=0; c<W; c++){
+          const cellData = grid[r][c];
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.r = r;
+          cell.dataset.c = c;
+          cell.dataset.checked = "0";
+          cell.dataset.checkedWrong = "0";
+
+          if (!cellData) {
+            cell.classList.add("block");
+            crossBoard.appendChild(cell);
+            continue;
+          }
+
+          if (cellData.highlight) cell.classList.add("highlight");
+
+          if (cellData.num != null) {
+            const n = document.createElement("div");
+            n.className = "num";
+            n.textContent = cellData.num;
+            cell.appendChild(n);
+          }
+
+          const inp = document.createElement("input");
+          inp.maxLength = 1;
+          inp.autocomplete = "off";
+          inp.spellcheck = false;
+          inp.inputMode = "text";
+          inp.dataset.expected = cellData.ch;
+          inp.dataset.r = r;
+          inp.dataset.c = c;
+
+          inp.addEventListener("focus", () => {
+            activeInput = inp;
+            const rr = Number(inp.dataset.r), cc = Number(inp.dataset.c);
+            if (cc + 1 < W && grid[rr][cc + 1]) activeDir = "across";
+            else if (rr + 1 < H && grid[rr + 1][cc]) activeDir = "down";
+          });
+
+          inp.addEventListener("input", () => {
+            inp.value = (inp.value || "").slice(0,1).toUpperCase();
+            clearCheckedStateForInput(inp);
+            updateNumberVisibility(inp);
+            autoMoveNext(inp);
+          });
+
+          inp.addEventListener("keydown", (e) => {
+            const k = e.key.toLowerCase();
+
+            if (k === "arrowleft") { e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)-1)?.focus(); return; }
+            if (k === "arrowright"){ e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)+1)?.focus(); return; }
+            if (k === "arrowup")   { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)-1, Number(inp.dataset.c))?.focus(); return; }
+            if (k === "arrowdown") { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)+1, Number(inp.dataset.c))?.focus(); return; }
+
+            if (k === "backspace" && inp.value === "") {
+              const prev = prevInDir(inp, activeDir);
+              if (prev) { prev.focus(); prev.select?.(); }
+              return;
+            }
+
+            if (k === "enter") { e.preventDefault(); toggleCheckPanel(); }
+          });
+
+          cell.appendChild(inp);
+          crossBoard.appendChild(cell);
+          inputRefs.push(inp);
+          updateNumberVisibility(inp);
+        }
+      }
+      closeCheckPanel();
+    }
+
+    function focusFirstCrossCell() { inputRefs[0]?.focus(); }
+
+    function runReset() {
+      closeCheckPanel();
+      inputRefs.forEach(inp => {
+        inp.value = "";
+        updateNumberVisibility(inp);
+        clearCheckedStateForInput(inp);
+      });
+      winPopup2.classList.add("hidden");
+      focusFirstCrossCell();
+    }
+
+    function runCheckAllCorrect() {
+      for (const inp of inputRefs) {
+        const expected = (inp.dataset.expected || "").toUpperCase();
+        const got = (inp.value || "").toUpperCase();
+        if (got === "" || got !== expected) return false;
+      }
+      return true;
+    }
+
+    resetCross.addEventListener("click", runReset);
+    checkCross.addEventListener("click", toggleCheckPanel);
+
+    checkLetterBtn.addEventListener("click", () => {
+      if (!activeInput) return;
+      clearCheckPaintAll();
+      checkInputs([activeInput]);
+      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.remove("hidden"); }
+    });
+
+    checkWordBtn.addEventListener("click", () => {
+      if (!activeInput) return;
+      clearCheckPaintAll();
+      checkInputs(getWordInputsFrom(activeInput, activeDir));
+      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.remove("hidden"); }
+    });
+
+    checkAllBtn.addEventListener("click", () => {
+      clearCheckPaintAll();
+      checkInputs([...inputRefs]);
+      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.remove("hidden"); }
+    });
+
+    openGift2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(gift2); });
+    backToLevelsFromWin2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(levelSelect); updateSelectUI(); });
+
+    // =============================
+    // Gift 2 – Love Letter logic (UPDATED)
+    // =============================
+    const letterImg = document.getElementById("letterImg");
+    const tapHint = document.getElementById("tapHint");
+    let letterState = "closed"; // closed → open → revealed
+
+    function resetGift2Letter(){
+      letterState = "closed";
+      if (!letterImg || !tapHint) return;
+      letterImg.src = "art/letter_closed.png";
+      letterImg.style.opacity = "1";
+      tapHint.style.opacity = "1";
+      letterImg.classList.remove("open","opening");
+      letterImg.classList.add("closed");
+      tapHint.textContent = "Tap to open 💌";
+    }
+
+    if (letterImg) {
+      letterImg.addEventListener("click", () => {
+        if (letterState === "closed") {
+          letterState = "open";
+          letterImg.classList.remove("closed");
+          letterImg.classList.add("opening");
+
+          setTimeout(() => {
+            letterImg.src = "art/letter_open.png";
+            letterImg.classList.remove("opening");
+            letterImg.classList.add("open");
+            tapHint.textContent = "Tap to read 💗";
+          }, 380);
+        }
+        else if (letterState === "open") {
+          letterState = "revealed";
+          letterImg.style.opacity = "0";
+          tapHint.style.opacity = "0";
+
+          setTimeout(() => {
+            // opens PDF (put your PDF at: art/loveletter.pdf)
+            window.open("art/loveletter.pdf", "_blank");
+          }, 300);
+        }
+      });
+    }
+
+    // =============================
+    // Level 3 logic (hint / solution / win)
+    // =============================
+    const waldoFull = document.getElementById("waldoFull");
+    const hitboxD = document.getElementById("hitboxD");
+    const sparkles = document.getElementById("sparkles");
+    const toast = document.getElementById("toast");
+
+    const hintBtn = document.getElementById("hintBtn");
+    const solutionBtn = document.getElementById("solutionBtn");
+    const hintPopup = document.getElementById("hintPopup");
+    const closeHint = document.getElementById("closeHint");
+
+    const winPopup3 = document.getElementById("winPopup3");
+    const solutionRing = document.getElementById("solutionRing");
+
+    let toastTimer = null;
+    let ringTimer = null;
+
+    // ✅ THIS IS WHERE YOU CHANGE THE COORDINATES
+    // percentages of the screen
+    const D_HITBOX = {
+      left:  "89%",
+      top:   "30%",
+      width: "10%",
+      height:"12%"
+    };
+
+    function applyHitboxFromConfig() {
+      hitboxD.style.left = D_HITBOX.left;
+      hitboxD.style.top = D_HITBOX.top;
+      hitboxD.style.width = D_HITBOX.width;
+      hitboxD.style.height = D_HITBOX.height;
+
+      solutionRing.style.left = D_HITBOX.left;
+      solutionRing.style.top = D_HITBOX.top;
+      solutionRing.style.width = D_HITBOX.width;
+      solutionRing.style.height = D_HITBOX.height;
+    }
+
+    function showNope() {
+      waldoFull.classList.remove("shake");
+      void waldoFull.offsetWidth;
+      waldoFull.classList.add("shake");
+
+      toast.classList.add("hidden");
+      void toast.offsetWidth;
+      toast.classList.remove("hidden");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.add("hidden"), 650);
+    }
+
+    function showSparkle() {
+      sparkles.classList.add("hidden");
+      void sparkles.offsetWidth;
+      sparkles.classList.remove("hidden");
+    }
+
+    function foundD() {
+      level3Complete = true;
+      updateSelectUI();
+
+      showSparkle();
+
+      waldoFull.classList.remove("zoom");
+      void waldoFull.offsetWidth;
+      waldoFull.classList.add("zoom");
+
+      setTimeout(() => {
+        winPopup3.classList.remove("hidden");
+      }, 420);
+    }
+
+    function hideSolutionRing() {
+      solutionRing.classList.add("hidden");
+      clearTimeout(ringTimer);
+      ringTimer = null;
+    }
+
+    function showSolutionRingQuick() {
+      applyHitboxFromConfig();
+      solutionRing.classList.remove("hidden");
+      clearTimeout(ringTimer);
+      ringTimer = setTimeout(() => solutionRing.classList.add("hidden"), 900);
+    }
+
+    waldoFull.addEventListener("click", (e) => {
+      if (!winPopup3.classList.contains("hidden")) return;
+      if (hintPopup && !hintPopup.classList.contains("hidden")) return;
+      if (e.target === hitboxD) return;
+      showNope();
+    });
+
+    hitboxD.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!winPopup3.classList.contains("hidden")) return;
+      foundD();
+    });
+
+    hintBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hintPopup.classList.remove("hidden");
+    });
+
+    closeHint.addEventListener("click", () => {
+      hintPopup.classList.add("hidden");
+    });
+
+    solutionBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showSolutionRingQuick();
+    });
+
+    openGift3.addEventListener("click", () => {
+      winPopup3.classList.add("hidden");
+      showScreen(gift3);
+    });
+
+    backToLevelsFromWin3.addEventListener("click", () => {
+      winPopup3.classList.add("hidden");
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
+    // =============================
+    // CHEST code logic
+    // =============================
+    function openChestPopupUI() {
+      chestPopup.classList.remove("hidden");
+      codeNope.classList.add("hidden");
+      [code1, code2, code3].forEach(i => i.value = "");
+      code1.focus();
+    }
+    function closeChestPopupUI() {
+      chestPopup.classList.add("hidden");
+    }
+    function normalizeCell(inp){
+      inp.value = (inp.value || "").slice(0,1).toUpperCase();
+    }
+    function readCode(){
+      return (code1.value + code2.value + code3.value).toUpperCase();
+    }
+    function doNope(){
+      codeNope.classList.remove("hidden");
+      codeRow.classList.remove("shake");
+      void codeRow.offsetWidth;
+      codeRow.classList.add("shake");
+    }
+
+    [code1, code2, code3].forEach((inp, idx, arr) => {
+      inp.addEventListener("input", () => {
+        normalizeCell(inp);
+        if (inp.value && arr[idx+1]) arr[idx+1].focus();
+      });
+      inp.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !inp.value && arr[idx-1]) arr[idx-1].focus();
+        if (e.key === "Enter") submitCode.click();
+      });
+    });
+
+    // (FIXED) Single chest click handler (you had it twice)
+    chestBtn.addEventListener("click", () => {
+      const allLevelsDone = level1Complete && level2Complete && level3Complete;
+      if (!allLevelsDone) return;
+
+      if (!chestUnlocked) {
+        openChestPopupUI();
+        return;
+      }
+
+      // Chest is unlocked and open - show reward
+      showScreen(finalReward);
+    });
+
+    submitCode.addEventListener("click", () => {
+      const typed = readCode();
+      if (typed === CHEST_CODE) {
+        chestUnlocked = true;
+        closeChestPopupUI();
+        updateSelectUI(); // updates chest image to open
+      } else {
+        doNope();
+      }
+    });
+
+    closeChestPopup.addEventListener("click", closeChestPopupUI);
+
+    // =============================
+    // Gift navigation
+    // =============================
+    openGift1.addEventListener("click", () => {
+      winPopup1.classList.add("hidden");
+      showScreen(gift1);
+    });
+
+    openGift2.addEventListener("click", () => {
+      winPopup2.classList.add("hidden");
+      resetGift2Letter();     // reset animation each time
+      showScreen(gift2);
+    });
+
+    backToLevelsFromGift2.addEventListener("click", () => {
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
+  </script>
+</body>
+</html>
