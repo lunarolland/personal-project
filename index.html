@@ -793,6 +793,15 @@
         left: 3px;
       }
     }
+    /* Popup letter size (Level 3 intro) */
+    .popupLetter{
+      height: 28px;
+      width: auto;
+      vertical-align: middle;
+      margin-left: 8px;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+    }
+
   </style>
 </head>
 
@@ -1043,7 +1052,7 @@
             <div class="popupTitle">Level 3</div>
             <div class="popupText">
               <span>Find the letter</span>
-              <img src="art/letter_d.png" alt="D">
+              <img class="popupLetter" src="art/letter_d.png" alt="D">
             </div>
             <div class="row">
               <button id="startLevel3Btn">Ok let's go</button>
