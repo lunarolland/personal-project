@@ -1745,8 +1745,15 @@
     checkAllBtn.addEventListener("click", () => {
       clearCheckPaintAll();
       checkInputs([...inputRefs]);
-      if (runCheckAllCorrect()) { level2Complete = true; winPopup2.classList.removeunningPopup2.classList.remove("hidden"); }
+
+      if (runCheckAllCorrect()) {
+        level2Complete = true;
+        winPopup2.classList.remove("hidden");  
+        updateSelectUI();                      
+        closeCheckPanel();                      
+      }
     });
+
 
     openGift2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(gift2); });
     backToLevelsFromWin2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(levelSelect); updateSelectUI(); });
