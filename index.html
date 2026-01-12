@@ -792,6 +792,31 @@
       .mobileControls{ display:none; }
     }
 
+    /* =============================
+   Mobile crossword fixes
+   ============================= */
+    @media (max-width: 480px) {
+
+  /* letters inside cells */
+      #level2 .cell input{
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+  /* little clue numbers */
+      .cell .num{
+        font-size: 8px;
+        top: 2px;
+        left: 4px;
+      }
+
+  /* slightly reduce padding so grid fits */
+      .crossBoard{
+        padding: 10px;
+        gap: 3px;
+      }
+    }
+
   </style>
 </head>
 
