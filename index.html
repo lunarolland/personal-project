@@ -1971,7 +1971,8 @@
         resetGift2(); // 👈 always reset when coming back
       }
     });
-
+    backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
+    
     window.addEventListener("pageshow", () => {
       resetGift2();
       showScreen(levelSelect);
@@ -1979,7 +1980,7 @@
     });
 
 
-    backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
+    
 
 
     // =============================
