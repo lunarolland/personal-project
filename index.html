@@ -744,67 +744,107 @@
     /* =============================
    Gift 3: Curtains -> wallpaper choice
    ============================= */
-    .gift3Wrap{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      text-align:center;
-      padding: 6px 0 12px;
+    /* =============================
+   Gift 3 — FULL WIDTH CURTAINS + UI INSIDE
+   ============================= */
+    #gift3{
+      padding: 12px 14px 16px;
+      background:#add8e6;
     }
     
-    .curtainBtn{
-      width: 280px;
-      height: 280px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.25);
-      border: 1px solid rgba(0,0,0,0.08);
+    .curtainStage{
+      position: relative;
+      width: 100%;
+      flex: 1;
       display:flex;
       align-items:center;
       justify-content:center;
+      min-height: 0;
+    }
+    
+    /* Full-width curtains */
+    .curtainTap{
+      border:0;
       padding:0;
+      background: transparent;
+      cursor:pointer;
+      width: 100%;
+      max-width: 440px;     /* keep it nice in the phone frame */
     }
     
-    .curtainBtn img{
-      width: 320px;
-      height:auto;
-      object-fit:contain;
+    .curtainTap img{
+      width: 100%;
+      height: auto;
+      display:block;
       user-select:none;
       -webkit-user-drag:none;
       filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
     }
     
-    .gift3Text{
-      width: 100%;
-      max-width: 340px;
-      background: rgba(20,20,24,0.85);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 16px;
-      padding: 12px;
-      color:#fff;
-      font-weight: 800;
-      font-size: 13px;
-      line-height: 1.4;
+    /* The content that sits "inside" the open curtains */
+    .curtainInside{
+      position:absolute;
+      /* TUNE THESE 4 VALUES to match your curtain opening */
+      left: 10%;
+      right: 10%;
+      top: 18%;
+      bottom: 14%;
+    
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:auto;
     }
     
-    .gift3BtnRow{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-top: 8px;
+    /* Light card (no black/white text) */
+    .insideCard{
+      width: 100%;
+      max-width: 360px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
     }
+    
+    .insideText{
+      color:#032030;
+      font-weight: 900;
+      font-size: 13px;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      text-align:center;
+    }
+    
+    /* BOTH buttons same style */
+    .insideBtns{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    
+    .choiceBtn{
+      width: 100%;
+      border-radius: 999px;
+      padding: 14px 16px;
+      font-weight: 900;
+      font-size: 14px;
+    
+      background: rgba(255,255,255,0.85);
+      color:#032030;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+    
+    .choiceBtn:active{ transform: translateY(1px); }
     
     .wallPreview{
-      width: min(360px, 86vw);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.10);
+      display:block;
     }
     
-    .dlBtn{ text-decoration:none; }
+    .dlLink{ text-decoration:none; }
 
 
     /* =============================
@@ -1171,38 +1211,43 @@
         <button class="secondary" id="backToLevelsFromGift3">←</button>
       </div>
     
-      <div class="gift3Wrap">
-        <p class="hint" id="gift3Hint">Tap the curtains </p>
+      <p class="hint" id="gift3Hint" style="text-align:center;">Choose your wallpaper 👇</p>
     
-        <button class="curtainBtn" id="curtainBtn" aria-label="Open curtains">
+      <div class="curtainStage" id="curtainStage">
+        <button class="curtainTap" id="curtainBtn" aria-label="Open curtains">
           <img id="curtainImg" src="art/curtain_closed.png" alt="curtains">
         </button>
     
-        <div class="gift3Choices hidden" id="gift3Choices">
-          <div class="gift3Text" id="gift3Text">
-            I told you you were going to have to choose which version of the wallpaper you wanted
-          </div>
+        <!-- This sits INSIDE the curtains when open -->
+        <div class="curtainInside hidden" id="gift3Inside">
+          <div class="insideCard">
+            <div class="insideText">
+              I told you you were going to have to choose which version of the wallpaper you wanted 😌
+            </div>
     
-          <div class="gift3BtnRow">
-            <button id="wallOpt1">Option 1 (slightly more shaded)</button>
-            <button class="secondary" id="wallOpt2">Option 2 (brighter)</button>
+            <div class="insideBtns">
+              <button class="choiceBtn" id="wallOpt1">Option 1 (slightly more shaded)</button>
+              <button class="choiceBtn" id="wallOpt2">Option 2 (brighter)</button>
+            </div>
           </div>
         </div>
-    
-        <div class="gift3Result hidden" id="gift3Result">
-          <img id="wallPreview" class="wallPreview" src="" alt="Wallpaper preview">
-          <div class="gift3BtnRow">
-            <a id="wallDownload" class="dlBtn" href="#" download>
-              <button>Download</button>
-            </a>
-            <button class="secondary" id="chooseAgain">Choose again</button>
-          </div>
-          <p class="hint" style="max-width:320px; margin-top:6px;">
-            (If you’re on iPhone: tapping Download may open the image — then long-press to save.)
-          </p>
+
+    <!-- Optional: show a preview overlay INSIDE too -->
+    <div class="curtainInside hidden" id="gift3PreviewWrap">
+      <div class="insideCard">
+        <img id="wallPreview" class="wallPreview" src="" alt="Wallpaper preview">
+
+        <div class="insideBtns" style="margin-top:12px;">
+          <a id="wallDownload" href="#" download class="dlLink">
+            <button class="choiceBtn">Download</button>
+          </a>
+          <button class="choiceBtn" id="chooseAgain">Choose again</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
 
 
     <!-- CHEST CODE POPUP -->
@@ -1928,15 +1973,16 @@
     // =============================
 // Gift 3: curtains -> choose wallpaper -> download
 // =============================
+    // =============================
+// Gift 3: curtains -> choose wallpaper INSIDE curtains
+// =============================
     const curtainBtn = document.getElementById("curtainBtn");
     const curtainImg = document.getElementById("curtainImg");
-    const gift3Hint = document.getElementById("gift3Hint");
+    const gift3Inside = document.getElementById("gift3Inside");
+    const gift3PreviewWrap = document.getElementById("gift3PreviewWrap");
     
-    const gift3Choices = document.getElementById("gift3Choices");
     const wallOpt1 = document.getElementById("wallOpt1");
     const wallOpt2 = document.getElementById("wallOpt2");
-    
-    const gift3Result = document.getElementById("gift3Result");
     const wallPreview = document.getElementById("wallPreview");
     const wallDownload = document.getElementById("wallDownload");
     const chooseAgain = document.getElementById("chooseAgain");
@@ -1945,44 +1991,31 @@
     
     function resetGift3(){
       curtainStage = 0;
-      if (curtainImg) curtainImg.src = "art/curtain_closed.png";
-      if (gift3Hint) gift3Hint.textContent = "Tap the curtains 🎭";
-      gift3Choices?.classList.add("hidden");
-      gift3Result?.classList.add("hidden");
-      if (wallPreview) wallPreview.src = "";
-      if (wallDownload) {
-        wallDownload.href = "#";
-        wallDownload.removeAttribute("download");
-      }
+      curtainImg.src = "art/curtain_closed.png";
+      gift3Inside.classList.add("hidden");
+      gift3PreviewWrap.classList.add("hidden");
+      wallPreview.src = "";
+      wallDownload.href = "#";
     }
     
     function openCurtains(){
       curtainStage = 1;
       curtainImg.src = "art/curtain_open.png";
-      gift3Hint.textContent = "Choose your wallpaper 👇";
-      gift3Choices.classList.remove("hidden");
+      gift3Inside.classList.remove("hidden");
+      gift3PreviewWrap.classList.add("hidden");
     }
     
     function showWallpaper(which){
       const file = which === 1 ? "art/wallpaper.png" : "art/wallpaper2.png";
       wallPreview.src = file;
-    
-      // download attr works on most desktop/Android browsers.
-      // iOS often opens the image instead; user can long-press to save.
       wallDownload.href = file;
       wallDownload.setAttribute("download", which === 1 ? "wallpaper.png" : "wallpaper2.png");
     
-      gift3Result.classList.remove("hidden");
-      gift3Choices.classList.add("hidden");
-      gift3Hint.textContent = "There you go 😌";
+      gift3Inside.classList.add("hidden");
+      gift3PreviewWrap.classList.remove("hidden");
     }
     
     curtainBtn?.addEventListener("click", () => {
-      // small pop animation reuse (like Gift 2)
-      curtainImg.classList.remove("letterPop");
-      void curtainImg.offsetWidth;
-      curtainImg.classList.add("letterPop");
-    
       if (curtainStage === 0) openCurtains();
     });
     
@@ -1990,18 +2023,17 @@
     wallOpt2?.addEventListener("click", () => showWallpaper(2));
     
     chooseAgain?.addEventListener("click", () => {
-      gift3Result.classList.add("hidden");
-      gift3Choices.classList.remove("hidden");
-      gift3Hint.textContent = "Choose your wallpaper 👇";
+      gift3PreviewWrap.classList.add("hidden");
+      gift3Inside.classList.remove("hidden");
     });
     
-    // Make sure it resets when leaving Gift 3
+    // Reset when leaving Gift 3
     backToLevelsFromGift3.addEventListener("click", () => {
       resetGift3();
       showScreen(levelSelect);
       updateSelectUI();
     });
-
+    
 
     // =============================
     // Level 3 logic (hint / solution / win)
