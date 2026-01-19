@@ -1908,7 +1908,7 @@
     // ✅ CHANGED: ensure Gift2 is always reset BEFORE showing
     openGift2.addEventListener("click", () => {
       winPopup2.classList.add("hidden");
-      resetGift2();
+      resetGift2();  // This line is still needed
       showScreen(gift2);
     });
 
@@ -1925,41 +1925,25 @@
     const letterImg = document.getElementById("letterImg");
     const gift2Hint = document.getElementById("gift2Hint");
 
-    let letterStage = 0; // 0 closed, 1 open
+    // REMOVE this line completely: let letterStage = 0; // 0 closed, 1 open
     function resetGift2(){
-      letterStage = 0;
       letterImg.src = "art/letter_closed.png";
       gift2Hint.textContent = "Tap the letter 💌";
     }
 
     // ✅ CHANGED: safari-safe order + repaint before opening PDF
     letterBtn?.addEventListener("click", () => {
-      // Pop animation
-      letterImg.classList.remove("letterPop");
-      void letterImg.offsetWidth;
-      letterImg.classList.add("letterPop");
-
-      if (letterStage === 0) {
-        letterStage = 1;
-        letterImg.src = "art/letter_open.png";
-        gift2Hint.textContent = "Tap again to read it 👀";
-        return;
-      }
-
-      // ✅ CRITICAL ORDER (Safari-safe)
-      resetGift2();                 // 1) ensure CLOSED state
-      showScreen(levelSelect);       // 2) leave Gift2 completely
-      updateSelectUI();              // 3) update UI immediately
-
-      // 4) allow repaint before opening PDF
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
-          if (!opened) window.location.href = "art/loveletter.pdf";
-        }, 50);
-      });
+      // 1) Reset immediately
+      resetGift2();
+      
+      // 2) Go back to level select IMMEDIATELY
+      showScreen(levelSelect);
+      updateSelectUI();
+      
+      // 3) Open PDF in new tab
+      const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+      if (!opened) window.location.href = "art/loveletter.pdf";
     });
-
     backToLevelsFromGift2.addEventListener("click", () => {
       resetGift2();
       showScreen(levelSelect);
