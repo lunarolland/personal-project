@@ -1919,6 +1919,18 @@
     });
 
     // =============================
+    // Helper: open PDF in new tab (Safari-safe)
+    // =============================
+    function openPdfInNewTab(url){
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    // =============================
     // Gift 2: letter closed -> open -> PDF (SAFARI SAFE)
     // =============================
     const letterBtn = document.getElementById("letterBtn");
@@ -1954,9 +1966,8 @@
       // 4) allow repaint before opening PDF
       requestAnimationFrame(() => {
         setTimeout(() => {
-          const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
-          if (!opened) window.location.href = "art/loveletter.pdf";
-        }, 50);
+          openPdfInNewTab("art/loveletter.pdf");
+        }, 80);
       });
     });
 
