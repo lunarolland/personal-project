@@ -1907,6 +1907,14 @@
       }
     });
 
+    // ✅ Reset Gift 2 when user comes back to the game tab (after reading the PDF)
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && !gift2.classList.contains("hidden")) {
+        resetGift2();
+      }
+    });
+
+
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
 
 
