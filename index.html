@@ -1972,6 +1972,12 @@
       }
     });
 
+    window.addEventListener("pageshow", () => {
+      resetGift2();
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
 
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
 
