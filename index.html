@@ -886,9 +886,9 @@
 
     /* Popup letter size (Level 3 intro) */
     .popupLetter{
-      height: 28px;
+      height: 38px;
       width: auto;
-      vertical-align: middle;
+      vertical-align: -6px;
       margin-left: 8px;
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
     }
@@ -1426,6 +1426,17 @@
     // --- Level 3 intro popup logic ---
     const intro3Popup = document.getElementById("intro3Popup");
     const startLevel3Btn = document.getElementById("startLevel3Btn");
+    // Prevent popup clicks from triggering the game underneath
+    intro3Popup.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    
+    // Also block clicks on the popup card itself (extra safety)
+    intro3Popup.querySelector(".popupCard")
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
     function openIntro3() { intro3Popup?.classList.remove("hidden"); }
     function closeIntro3() { intro3Popup?.classList.add("hidden"); }
     startLevel3Btn?.addEventListener("click", closeIntro3);
