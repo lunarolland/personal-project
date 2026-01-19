@@ -1917,7 +1917,11 @@
     });
 
 
-    openGift2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(gift2); });
+    openGift2.addEventListener("click", () => {
+      winPopup2.classList.add("hidden");
+      resetGift2();             
+      showScreen(gift2);
+    });
     backToLevelsFromWin2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(levelSelect); updateSelectUI(); });
 
     // =============================
@@ -1961,8 +1965,8 @@
 
     // ✅ Reset Gift 2 when user comes back to the game tab (after reading the PDF)
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && !gift2.classList.contains("hidden")) {
-        resetGift2();
+      if (document.visibilityState === "visible") {
+        resetGift2(); // 👈 always reset when coming back
       }
     });
 
