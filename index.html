@@ -1634,6 +1634,13 @@
     let activeDir = "across";
     let activeInput = null;
 
+    function setCellChar(inp, ch) {
+      inp.value = (ch || "").slice(0,1).toUpperCase();
+      clearCheckedStateForInput(inp);
+      updateNumberVisibility(inp);
+    }
+
+    
     function getInputAt(r, c) {
       return inputRefs.find(x => Number(x.dataset.r) === r && Number(x.dataset.c) === c) || null;
     }
@@ -1776,31 +1783,33 @@
             else if (rr + 1 < H && grid[rr + 1][cc]) activeDir = "down";
           });
 
-          inp.addEventListener("input", () => {
-            const v = (inp.value || "").toUpperCase();
-            // Keep ONLY the newest typed character (overwrites old one)
-            inp.value = v.length ? v[v.length - 1] : "";
-            clearCheckedStateForInput(inp);
-            updateNumberVisibility(inp);
-            autoMoveNext(inp);
-          });
+      
 
           inp.addEventListener("keydown", (e) => {
             const k = e.key.toLowerCase();
-
+          
+            // ✅ LETTER TYPED → ALWAYS OVERWRITE
+            if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+              e.preventDefault();
+              setCellChar(inp, e.key);
+              autoMoveNext(inp);
+              return;
+            }
+          
             if (k === "arrowleft") { e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)-1)?.focus(); return; }
             if (k === "arrowright"){ e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)+1)?.focus(); return; }
             if (k === "arrowup")   { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)-1, Number(inp.dataset.c))?.focus(); return; }
             if (k === "arrowdown") { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)+1, Number(inp.dataset.c))?.focus(); return; }
-
+          
             if (k === "backspace" && inp.value === "") {
               const prev = prevInDir(inp, activeDir);
               if (prev) { prev.focus(); prev.select?.(); }
               return;
             }
-
+          
             if (k === "enter") { e.preventDefault(); toggleCheckPanel(); }
           });
+
 
           cell.appendChild(inp);
           crossBoard.appendChild(cell);
