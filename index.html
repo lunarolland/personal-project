@@ -1958,11 +1958,13 @@
       updateSelectUI();
     
       // ✅ then open the PDF slightly later (lets Safari repaint the closed state)
-      setTimeout(() => {
-        const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
-        if (!opened) window.location.href = "art/loveletter.pdf";
-      }, 80);
-    });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+          if (!opened) window.location.href = "art/loveletter.pdf";
+        });
+      });
+
 
 
     // ✅ Reset Gift 2 when user comes back to the game tab (after reading the PDF)
@@ -1973,11 +1975,13 @@
     });
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
     
-    window.addEventListener("pageshow", () => {
-      resetGift2();
-      showScreen(levelSelect);
-      updateSelectUI();
+    // ✅ Safari bfcache fix: only runs when the page is restored from cache (coming back from PDF tab)
+    window.addEventListener("pageshow", (e) => {
+      if (!e.persisted) return;          // <- IMPORTANT: don't run on normal loads
+      resetGift2();                      // <- close the letter + reset stage
+      // Do NOT call showScreen(...) here
     });
+
 
 
     
