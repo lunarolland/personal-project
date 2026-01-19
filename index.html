@@ -740,6 +740,72 @@
     .letterPop{
       animation: popIn 260ms ease-out;
     }
+    
+    /* =============================
+   Gift 3: Curtains -> wallpaper choice
+   ============================= */
+    .gift3Wrap{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      text-align:center;
+      padding: 6px 0 12px;
+    }
+    
+    .curtainBtn{
+      width: 280px;
+      height: 280px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(0,0,0,0.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+    }
+    
+    .curtainBtn img{
+      width: 320px;
+      height:auto;
+      object-fit:contain;
+      user-select:none;
+      -webkit-user-drag:none;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+    }
+    
+    .gift3Text{
+      width: 100%;
+      max-width: 340px;
+      background: rgba(20,20,24,0.85);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 12px;
+      color:#fff;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    .gift3BtnRow{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    
+    .wallPreview{
+      width: min(360px, 86vw);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+    }
+    
+    .dlBtn{ text-decoration:none; }
+
 
     /* =============================
        Mobile arrow controls (Level 1)
@@ -1098,15 +1164,46 @@
     </div>
 
     <!-- GIFT 3 PLACEHOLDER -->
+    <!-- GIFT 3: Curtains -> choose wallpaper -->
     <div class="level hidden" id="gift3">
       <div class="topBar">
         <div class="badge">Gift 3</div>
         <button class="secondary" id="backToLevelsFromGift3">←</button>
       </div>
-      <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
-        <p class="hint">Gift 3 content goes here 💗</p>
+    
+      <div class="gift3Wrap">
+        <p class="hint" id="gift3Hint">Tap the curtains 🎭</p>
+    
+        <button class="curtainBtn" id="curtainBtn" aria-label="Open curtains">
+          <img id="curtainImg" src="art/curtain_closed.png" alt="curtains">
+        </button>
+    
+        <div class="gift3Choices hidden" id="gift3Choices">
+          <div class="gift3Text" id="gift3Text">
+            I told you you were going to have to choose which version of the wallpaper you wanted 😌
+          </div>
+    
+          <div class="gift3BtnRow">
+            <button id="wallOpt1">Option 1 (slightly more shaded)</button>
+            <button class="secondary" id="wallOpt2">Option 2 (brighter)</button>
+          </div>
+        </div>
+    
+        <div class="gift3Result hidden" id="gift3Result">
+          <img id="wallPreview" class="wallPreview" src="" alt="Wallpaper preview">
+          <div class="gift3BtnRow">
+            <a id="wallDownload" class="dlBtn" href="#" download>
+              <button>Download</button>
+            </a>
+            <button class="secondary" id="chooseAgain">Choose again</button>
+          </div>
+          <p class="hint" style="max-width:320px; margin-top:6px;">
+            (If you’re on iPhone: tapping Download may open the image — then long-press to save.)
+          </p>
+        </div>
       </div>
     </div>
+
 
     <!-- CHEST CODE POPUP -->
     <div class="popup hidden" id="chestPopup">
@@ -1799,6 +1896,85 @@
     });
 
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
+
+
+    // =============================
+// Gift 3: curtains -> choose wallpaper -> download
+// =============================
+    const curtainBtn = document.getElementById("curtainBtn");
+    const curtainImg = document.getElementById("curtainImg");
+    const gift3Hint = document.getElementById("gift3Hint");
+    
+    const gift3Choices = document.getElementById("gift3Choices");
+    const wallOpt1 = document.getElementById("wallOpt1");
+    const wallOpt2 = document.getElementById("wallOpt2");
+    
+    const gift3Result = document.getElementById("gift3Result");
+    const wallPreview = document.getElementById("wallPreview");
+    const wallDownload = document.getElementById("wallDownload");
+    const chooseAgain = document.getElementById("chooseAgain");
+    
+    let curtainStage = 0; // 0 closed, 1 open
+    
+    function resetGift3(){
+      curtainStage = 0;
+      if (curtainImg) curtainImg.src = "art/curtain_closed.png";
+      if (gift3Hint) gift3Hint.textContent = "Tap the curtains 🎭";
+      gift3Choices?.classList.add("hidden");
+      gift3Result?.classList.add("hidden");
+      if (wallPreview) wallPreview.src = "";
+      if (wallDownload) {
+        wallDownload.href = "#";
+        wallDownload.removeAttribute("download");
+      }
+    }
+    
+    function openCurtains(){
+      curtainStage = 1;
+      curtainImg.src = "art/curtain_open.png";
+      gift3Hint.textContent = "Choose your wallpaper 👇";
+      gift3Choices.classList.remove("hidden");
+    }
+    
+    function showWallpaper(which){
+      const file = which === 1 ? "art/wallpaper.png" : "art/wallpaper2.png";
+      wallPreview.src = file;
+    
+      // download attr works on most desktop/Android browsers.
+      // iOS often opens the image instead; user can long-press to save.
+      wallDownload.href = file;
+      wallDownload.setAttribute("download", which === 1 ? "wallpaper.png" : "wallpaper2.png");
+    
+      gift3Result.classList.remove("hidden");
+      gift3Choices.classList.add("hidden");
+      gift3Hint.textContent = "There you go 😌";
+    }
+    
+    curtainBtn?.addEventListener("click", () => {
+      // small pop animation reuse (like Gift 2)
+      curtainImg.classList.remove("letterPop");
+      void curtainImg.offsetWidth;
+      curtainImg.classList.add("letterPop");
+    
+      if (curtainStage === 0) openCurtains();
+    });
+    
+    wallOpt1?.addEventListener("click", () => showWallpaper(1));
+    wallOpt2?.addEventListener("click", () => showWallpaper(2));
+    
+    chooseAgain?.addEventListener("click", () => {
+      gift3Result.classList.add("hidden");
+      gift3Choices.classList.remove("hidden");
+      gift3Hint.textContent = "Choose your wallpaper 👇";
+    });
+    
+    // Make sure it resets when leaving Gift 3
+    backToLevelsFromGift3.addEventListener("click", () => {
+      resetGift3();
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
 
     // =============================
     // Level 3 logic (hint / solution / win)
