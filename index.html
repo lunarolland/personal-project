@@ -1777,7 +1777,9 @@
           });
 
           inp.addEventListener("input", () => {
-            inp.value = (inp.value || "").slice(0,1).toUpperCase();
+            const v = (inp.value || "").toUpperCase();
+            // Keep ONLY the newest typed character (overwrites old one)
+            inp.value = v.length ? v[v.length - 1] : "";
             clearCheckedStateForInput(inp);
             updateNumberVisibility(inp);
             autoMoveNext(inp);
