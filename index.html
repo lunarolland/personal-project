@@ -1891,7 +1891,8 @@
         gift2Hint.textContent = "Tap again to read it 👀";
       } else {
         // More reliable on iPhone than window.open sometimes:
-        window.location.href = "art/loveletter.pdf";
+        const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+        if (!opened) window.location.href = "art/loveletter.pdf";
       }
     });
 
