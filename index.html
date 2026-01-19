@@ -740,18 +740,15 @@
     .letterPop{
       animation: popIn 260ms ease-out;
     }
-    
+
     /* =============================
-   Gift 3: Curtains -> wallpaper choice
-   ============================= */
-    /* =============================
-   Gift 3 — FULL WIDTH CURTAINS + UI INSIDE
-   ============================= */
+       Gift 3 — FULL WIDTH CURTAINS + UI INSIDE
+       ============================= */
     #gift3{
       padding: 12px 14px 16px;
       background:#add8e6;
     }
-    
+
     .curtainStage{
       position: relative;
       width: 100%;
@@ -761,17 +758,14 @@
       justify-content:center;
       min-height: 0;
     }
-    
-    /* Full-width curtains */
+
     .curtainTap{
       border:0;
       padding:0;
       background: transparent;
       cursor:pointer;
       width: 100%;
-      /*max-width: 440px;     /* keep it nice in the phone frame */
     }
-    
     .curtainTap img{
       width: 100%;
       height: auto;
@@ -780,23 +774,20 @@
       -webkit-user-drag:none;
       filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
     }
-    
-    /* The content that sits "inside" the open curtains */
+
     .curtainInside{
       position:absolute;
-      /* TUNE THESE 4 VALUES to match your curtain opening */
       left: 10%;
       right: 10%;
       top: 18%;
       bottom: 14%;
-    
+
       display:flex;
       align-items:center;
       justify-content:center;
       pointer-events:auto;
     }
-    
-    /* Light card (no black/white text) */
+
     .insideCard{
       width: 100%;
       max-width: 260px;
@@ -806,7 +797,7 @@
       padding: 14px;
       box-shadow: 0 16px 40px rgba(0,0,0,0.18);
     }
-    
+
     .insideText{
       color:#032030;
       font-weight: 900;
@@ -815,37 +806,33 @@
       margin-bottom: 12px;
       text-align:center;
     }
-    
-    /* BOTH buttons same style */
+
     .insideBtns{
       display:flex;
       flex-direction:column;
       gap:10px;
     }
-    
+
     .choiceBtn{
       width: 100%;
       border-radius: 999px;
       padding: 14px 16px;
       font-weight: 900;
       font-size: 14px;
-    
       background: rgba(255,255,255,0.85);
       color:#032030;
       border: 1px solid rgba(0,0,0,0.12);
     }
-    
     .choiceBtn:active{ transform: translateY(1px); }
-    
+
     .wallPreview{
       width: 100%;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,0.10);
       display:block;
     }
-    
-    .dlLink{ text-decoration:none; }
 
+    .dlLink{ text-decoration:none; }
 
     /* =============================
        Mobile arrow controls (Level 1)
@@ -880,25 +867,23 @@
        Mobile crossword – fit letters in cells
        ============================= */
     @media (max-width: 480px) {
-      /* reduce board padding so cells get bigger */
       .crossBoard{
         padding: 10px;
         gap: 3px;
       }
-      /* letters scale with cell size */
       #level2 .cell input{
-        font-size: 65%;   /* percentage of cell height */
+        font-size: 65%;
         line-height: 1;
         font-weight: 900;
         letter-spacing: 0.2px;
       }
-      /* numbers already OK, but keep tight */
       .cell .num{
         font-size: 8px;
         top: 2px;
         left: 3px;
       }
     }
+
     /* Popup letter size (Level 3 intro) */
     .popupLetter{
       height: 28px;
@@ -907,7 +892,6 @@
       margin-left: 8px;
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
     }
-
   </style>
 </head>
 
@@ -1203,28 +1187,27 @@
       </div>
     </div>
 
-    <!-- GIFT 3 PLACEHOLDER -->
     <!-- GIFT 3: Curtains -> choose wallpaper -->
     <div class="level hidden" id="gift3">
       <div class="topBar">
         <div class="badge">Gift 3</div>
         <button class="secondary" id="backToLevelsFromGift3">←</button>
       </div>
-    
+
       <p class="hint" id="gift3Hint" style="text-align:center;">Choose your wallpaper 👇</p>
-    
+
       <div class="curtainStage" id="curtainStage">
         <button class="curtainTap" id="curtainBtn" aria-label="Open curtains">
           <img id="curtainImg" src="art/curtain_closed.png" alt="curtains">
         </button>
-    
+
         <!-- This sits INSIDE the curtains when open -->
         <div class="curtainInside hidden" id="gift3Inside">
           <div class="insideCard">
             <div class="insideText">
               I told you you were going to have to choose which version of the wallpaper you wanted 😌
             </div>
-    
+
             <div class="insideBtns">
               <button class="choiceBtn" id="wallOpt1">Option 1 (slightly more shaded)</button>
               <button class="choiceBtn" id="wallOpt2">Option 2 (brighter)</button>
@@ -1232,23 +1215,22 @@
           </div>
         </div>
 
-    <!-- Optional: show a preview overlay INSIDE too -->
-    <div class="curtainInside hidden" id="gift3PreviewWrap">
-      <div class="insideCard">
-        <img id="wallPreview" class="wallPreview" src="" alt="Wallpaper preview">
+        <!-- Optional: show a preview overlay INSIDE too -->
+        <div class="curtainInside hidden" id="gift3PreviewWrap">
+          <div class="insideCard">
+            <img id="wallPreview" class="wallPreview" src="" alt="Wallpaper preview">
 
-        <div class="insideBtns" style="margin-top:12px;">
-          <a id="wallDownload" href="#" download class="dlLink">
-            <button class="choiceBtn">Download</button>
-          </a>
-          <button class="choiceBtn" id="chooseAgain">Choose again</button>
+            <div class="insideBtns" style="margin-top:12px;">
+              <a id="wallDownload" href="#" download class="dlLink">
+                <button class="choiceBtn">Download</button>
+              </a>
+              <button class="choiceBtn" id="chooseAgain">Choose again</button>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
-  </div>
-</div>
-
-
 
     <!-- CHEST CODE POPUP -->
     <div class="popup hidden" id="chestPopup">
@@ -1444,8 +1426,8 @@
     // --- Level 3 intro popup logic ---
     const intro3Popup = document.getElementById("intro3Popup");
     const startLevel3Btn = document.getElementById("startLevel3Btn");
-    function openIntro3(){ intro3Popup?.classList.remove("hidden"); }
-    function closeIntro3(){ intro3Popup?.classList.add("hidden"); }
+    function openIntro3() { intro3Popup?.classList.remove("hidden"); }
+    function closeIntro3() { intro3Popup?.classList.add("hidden"); }
     startLevel3Btn?.addEventListener("click", closeIntro3);
 
     level3Btn.addEventListener("click", () => {
@@ -1463,10 +1445,20 @@
     backBtn3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); closeIntro3(); });
 
     backToLevelsFromGift1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
-    backToLevelsFromGift2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
-    backToLevelsFromGift3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromGift3.addEventListener("click", () => { resetGift3(); showScreen(levelSelect); updateSelectUI(); });
 
     backToLevelsFromReward.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+
+    // ✅ SAFARI BFCache FIX:
+    // If Safari restores the page from BFCache (persisted), force Gift2 back to safe state
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) {
+        resetGift2();
+        showScreen(levelSelect);
+        updateSelectUI();
+      }
+    });
 
     // =============================
     // Level 1 Maze
@@ -1685,7 +1677,6 @@
       updateNumberVisibility(inp);
     }
 
-    
     function getInputAt(r, c) {
       return inputRefs.find(x => Number(x.dataset.r) === r && Number(x.dataset.c) === c) || null;
     }
@@ -1828,11 +1819,9 @@
             else if (rr + 1 < H && grid[rr + 1][cc]) activeDir = "down";
           });
 
-      
-
           inp.addEventListener("keydown", (e) => {
             const k = e.key.toLowerCase();
-          
+
             // ✅ LETTER TYPED → ALWAYS OVERWRITE
             if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
               e.preventDefault();
@@ -1840,21 +1829,20 @@
               autoMoveNext(inp);
               return;
             }
-          
+
             if (k === "arrowleft") { e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)-1)?.focus(); return; }
             if (k === "arrowright"){ e.preventDefault(); activeDir="across"; getInputAt(Number(inp.dataset.r), Number(inp.dataset.c)+1)?.focus(); return; }
             if (k === "arrowup")   { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)-1, Number(inp.dataset.c))?.focus(); return; }
             if (k === "arrowdown") { e.preventDefault(); activeDir="down";   getInputAt(Number(inp.dataset.r)+1, Number(inp.dataset.c))?.focus(); return; }
-          
+
             if (k === "backspace" && inp.value === "") {
               const prev = prevInDir(inp, activeDir);
               if (prev) { prev.focus(); prev.select?.(); }
               return;
             }
-          
+
             if (k === "enter") { e.preventDefault(); toggleCheckPanel(); }
           });
-
 
           cell.appendChild(inp);
           crossBoard.appendChild(cell);
@@ -1910,102 +1898,90 @@
 
       if (runCheckAllCorrect()) {
         level2Complete = true;
-        winPopup2.classList.remove("hidden");  
-        updateSelectUI();                      
-        closeCheckPanel();                      
+        winPopup2.classList.remove("hidden");
+
+        updateSelectUI();
+        closeCheckPanel();
       }
     });
 
-
+    // ✅ CHANGED: ensure Gift2 is always reset BEFORE showing
     openGift2.addEventListener("click", () => {
       winPopup2.classList.add("hidden");
-      resetGift2();             
+      resetGift2();
       showScreen(gift2);
     });
-    backToLevelsFromWin2.addEventListener("click", () => { winPopup2.classList.add("hidden"); showScreen(levelSelect); updateSelectUI(); });
+
+    backToLevelsFromWin2.addEventListener("click", () => {
+      winPopup2.classList.add("hidden");
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
 
     // =============================
-    // Gift 2: letter closed -> open -> PDF
+    // Gift 2: letter closed -> open -> PDF (SAFARI SAFE)
     // =============================
     const letterBtn = document.getElementById("letterBtn");
     const letterImg = document.getElementById("letterImg");
     const gift2Hint = document.getElementById("gift2Hint");
 
     let letterStage = 0; // 0 closed, 1 open
-
     function resetGift2(){
       letterStage = 0;
       letterImg.src = "art/letter_closed.png";
       gift2Hint.textContent = "Tap the letter 💌";
     }
 
+    // ✅ CHANGED: safari-safe order + repaint before opening PDF
     letterBtn?.addEventListener("click", () => {
       // Pop animation
       letterImg.classList.remove("letterPop");
       void letterImg.offsetWidth;
       letterImg.classList.add("letterPop");
-    
+
       if (letterStage === 0) {
         letterStage = 1;
         letterImg.src = "art/letter_open.png";
         gift2Hint.textContent = "Tap again to read it 👀";
         return;
       }
-    
-      // ✅ IMPORTANT: reset the game UI FIRST so Safari snapshots the CLOSED letter
+
+      // ✅ CRITICAL ORDER (Safari-safe)
+      resetGift2();                 // 1) ensure CLOSED state
+      showScreen(levelSelect);       // 2) leave Gift2 completely
+      updateSelectUI();              // 3) update UI immediately
+
+      // 4) allow repaint before opening PDF
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+          if (!opened) window.location.href = "art/loveletter.pdf";
+        }, 50);
+      });
+    });
+
+    backToLevelsFromGift2.addEventListener("click", () => {
       resetGift2();
       showScreen(levelSelect);
       updateSelectUI();
-    
-      // ✅ then open the PDF slightly later (lets Safari repaint the closed state)
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
-          if (!opened) window.location.href = "art/loveletter.pdf";
-        });
-      });
-
-
-
-    // ✅ Reset Gift 2 when user comes back to the game tab (after reading the PDF)
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") {
-        resetGift2(); // 👈 always reset when coming back
-      }
-    });
-    backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
-    
-    // ✅ Safari bfcache fix: only runs when the page is restored from cache (coming back from PDF tab)
-    window.addEventListener("pageshow", (e) => {
-      if (!e.persisted) return;          // <- IMPORTANT: don't run on normal loads
-      resetGift2();                      // <- close the letter + reset stage
-      // Do NOT call showScreen(...) here
     });
 
-
-
-    
-
-
     // =============================
-// Gift 3: curtains -> choose wallpaper -> download
-// =============================
+    // Gift 3: curtains -> choose wallpaper INSIDE curtains
     // =============================
-// Gift 3: curtains -> choose wallpaper INSIDE curtains
-// =============================
     const curtainBtn = document.getElementById("curtainBtn");
     const curtainImg = document.getElementById("curtainImg");
     const gift3Inside = document.getElementById("gift3Inside");
     const gift3PreviewWrap = document.getElementById("gift3PreviewWrap");
-    
+
     const wallOpt1 = document.getElementById("wallOpt1");
     const wallOpt2 = document.getElementById("wallOpt2");
     const wallPreview = document.getElementById("wallPreview");
     const wallDownload = document.getElementById("wallDownload");
     const chooseAgain = document.getElementById("chooseAgain");
-    
+
     let curtainStage = 0; // 0 closed, 1 open
-    
+
     function resetGift3(){
       curtainStage = 0;
       curtainImg.src = "art/curtain_closed.png";
@@ -2014,43 +1990,42 @@
       wallPreview.src = "";
       wallDownload.href = "#";
     }
-    
+
     function openCurtains(){
       curtainStage = 1;
       curtainImg.src = "art/curtain_open.png";
       gift3Inside.classList.remove("hidden");
       gift3PreviewWrap.classList.add("hidden");
     }
-    
+
     function showWallpaper(which){
       const file = which === 1 ? "art/wallpaper.png" : "art/wallpaper2.png";
       wallPreview.src = file;
       wallDownload.href = file;
       wallDownload.setAttribute("download", which === 1 ? "wallpaper.png" : "wallpaper2.png");
-    
+
       gift3Inside.classList.add("hidden");
       gift3PreviewWrap.classList.remove("hidden");
     }
-    
+
     curtainBtn?.addEventListener("click", () => {
       if (curtainStage === 0) openCurtains();
     });
-    
+
     wallOpt1?.addEventListener("click", () => showWallpaper(1));
     wallOpt2?.addEventListener("click", () => showWallpaper(2));
-    
+
     chooseAgain?.addEventListener("click", () => {
       gift3PreviewWrap.classList.add("hidden");
       gift3Inside.classList.remove("hidden");
     });
-    
+
     // Reset when leaving Gift 3
     backToLevelsFromGift3.addEventListener("click", () => {
       resetGift3();
       showScreen(levelSelect);
       updateSelectUI();
     });
-    
 
     // =============================
     // Level 3 logic (hint / solution / win)
@@ -2237,7 +2212,6 @@
     });
 
     closeChestPopup.addEventListener("click", closeChestPopupUI);
-
   </script>
 </body>
 </html>
