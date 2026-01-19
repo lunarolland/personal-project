@@ -1940,28 +1940,30 @@
     }
 
     letterBtn?.addEventListener("click", () => {
-      // Add a tiny pop animation every tap
+      // Pop animation
       letterImg.classList.remove("letterPop");
       void letterImg.offsetWidth;
       letterImg.classList.add("letterPop");
-
+    
       if (letterStage === 0) {
         letterStage = 1;
         letterImg.src = "art/letter_open.png";
         gift2Hint.textContent = "Tap again to read it 👀";
-      } else {
-        // More reliable on iPhone than window.open sometimes:
-        const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
-      
-        // ✅ Reset + send him back to level select immediately
-        resetGift2();
-        showScreen(levelSelect);
-        updateSelectUI();
-      
-        // Fallback if popup blocked
-        if (!opened) window.location.href = "art/loveletter.pdf";
+        return;
       }
+    
+      // ✅ IMPORTANT: reset the game UI FIRST so Safari snapshots the CLOSED letter
+      resetGift2();
+      showScreen(levelSelect);
+      updateSelectUI();
+    
+      // ✅ then open the PDF slightly later (lets Safari repaint the closed state)
+      setTimeout(() => {
+        const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+        if (!opened) window.location.href = "art/loveletter.pdf";
+      }, 80);
     });
+
 
     // ✅ Reset Gift 2 when user comes back to the game tab (after reading the PDF)
     document.addEventListener("visibilitychange", () => {
