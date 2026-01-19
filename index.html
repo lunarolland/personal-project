@@ -1172,7 +1172,7 @@
       </div>
     
       <div class="gift3Wrap">
-        <p class="hint" id="gift3Hint">Tap the curtains 🎭</p>
+        <p class="hint" id="gift3Hint">Tap the curtains </p>
     
         <button class="curtainBtn" id="curtainBtn" aria-label="Open curtains">
           <img id="curtainImg" src="art/curtain_closed.png" alt="curtains">
@@ -1180,7 +1180,7 @@
     
         <div class="gift3Choices hidden" id="gift3Choices">
           <div class="gift3Text" id="gift3Text">
-            I told you you were going to have to choose which version of the wallpaper you wanted 😌
+            I told you you were going to have to choose which version of the wallpaper you wanted
           </div>
     
           <div class="gift3BtnRow">
@@ -1903,6 +1903,13 @@
       } else {
         // More reliable on iPhone than window.open sometimes:
         const opened = window.open("art/loveletter.pdf", "_blank", "noopener,noreferrer");
+      
+        // ✅ Reset + send him back to level select immediately
+        resetGift2();
+        showScreen(levelSelect);
+        updateSelectUI();
+      
+        // Fallback if popup blocked
         if (!opened) window.location.href = "art/loveletter.pdf";
       }
     });
