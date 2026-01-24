@@ -859,6 +859,16 @@
       border: 1px solid rgba(0,0,0,0.15);
       padding:0;
     }
+
+    /* Prevent double-tap zoom / text selection on mobile controls */
+    .mobileControls,
+    .mobileControls button{
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     @media (hover: hover) {
       .mobileControls{ display:none; }
     }
@@ -1339,6 +1349,8 @@
 
     let chestUnlocked = false;
     const CHEST_CODE = "HBD"; // <-- change code here if you want
+
+    
 
     function showScreen(screen) {
       cover.classList.add("hidden");
