@@ -878,30 +878,23 @@
        ============================= */
    @media (max-width: 480px) {
       #level2 .cell input{
-        font-size: 16px;                 /* prevents iOS zoom */
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-    
-        border: 0;
-        outline: none;
-        background: transparent;
-    
-        text-align: center;
-    
-        /* KILL the iOS “pill” look */
+        font-size: 16px;
         -webkit-appearance: none;
         appearance: none;
         border-radius: 0;
-    
-        /* Centering fix */
+        background: transparent;
+      
+        text-align:center;
+        width:100%;
+        height:100%;
+        padding:0;
+        margin:0;
+      
         line-height: 1;
         position: relative;
-        top: 0px;                        /* tiny vertical nudge (adjust 0–2px if needed) */
-    
-        /* Make it look smaller without changing font-size */
-        transform: scale(0.55);
+        top: 0px;
+      
+        transform: scale(0.55) scaleX(0.9);  /* <-- add scaleX */
         transform-origin: center;
       }
     
