@@ -876,21 +876,40 @@
     /* =============================
        Mobile crossword – fit letters in cells
        ============================= */
-    @media (max-width: 480px) {
-      #level2 .cell input{
-        font-size: 16px;          /* stops Safari zoom */
-        transform: scale(0.65);   /* visually smaller */
-        transform-origin: center;
-        line-height: 1;
-        font-weight: 900;
-        letter-spacing: 0.2px;
-      }
-      .cell .num{
-        font-size: 8px;
-        top: 2px;
-        left: 3px;
-      }
+   @media (max-width: 480px) {
+    #level2 .cell input{
+      font-size: 16px;         /* prevents iOS zoom */
+      line-height: 1;
+      padding: 0;              /* keep it centered */
+      margin: 0;
+      height: 100%;
+      width: 100%;
+  
+      display: flex;           /* helps Safari center better */
+      align-items: center;
+      justify-content: center;
+  
+      text-align: center;
+      letter-spacing: 0px;     /* reduce weird spacing */
     }
+  
+    /* Optional: make letters look smaller without scaling */
+    #level2 .cell{
+      font-size: 16px; /* doesn't hurt */
+    }
+  
+    /* Make the input look “smaller” by reducing visual weight */
+    #level2 .cell input{
+      font-weight: 800;        /* slightly less chunky */
+    }
+  
+    .cell .num{
+      font-size: 8px;
+      top: 2px;
+      left: 3px;
+    }
+  }
+
 
     /* Popup letter size (Level 3 intro) */
     .popupLetter{
