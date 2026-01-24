@@ -874,20 +874,16 @@
     }
 
     /* =============================
-       Mobile crossword – fit letters in cells, prevent iOS focus zoom
+       Mobile crossword – fit letters in cells
        ============================= */
-    @media (max-width: 480px) {
+   @media (max-width: 480px) {
       #level2 .cell input{
-        font-size: 16px; /* ≥16px prevents iPhone Safari auto-zoom on focus */
-        transform: scale(0.65);
-        transform-origin: center center;
+        font-size: 65%;
         line-height: 1;
         font-weight: 900;
         letter-spacing: 0.2px;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
       }
-
+    
       .cell .num{
         font-size: 8px;
         top: 2px;
