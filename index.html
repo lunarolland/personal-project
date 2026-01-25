@@ -1025,16 +1025,26 @@
       </div>
     </div>
 
-    <!-- GIFT 1 PLACEHOLDER -->
+    <!-- GIFT 1: Apple Music Playlist -->
     <div class="level hidden" id="gift1">
       <div class="topBar">
         <div class="badge">Gift 1</div>
         <button class="secondary" id="backToLevelsFromGift1">←</button>
       </div>
-      <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
-        <p class="hint">Gift 1 content goes here 💗</p>
+    
+      <div class="giftLetterWrap">
+        <p class="hint" id="gift1Hint">Tap to reveal 🎧</p>
+    
+        <button class="letterBtn" id="gift1Btn" aria-label="Reveal playlist">
+          <img id="gift1Img" src="art/gift1_hidden.png" alt="Hidden gift">
+        </button>
+    
+        <p class="hint" style="max-width:320px;">
+          (First tap: reveal. Second tap: open playlist.)
+        </p>
       </div>
     </div>
+
 
     <!-- LEVEL 2: CROSSWORD -->
     <div class="level hidden" id="level2">
@@ -1474,7 +1484,12 @@
     backBtn2.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
     backBtn3.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); closeIntro3(); });
 
-    backToLevelsFromGift1.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromGift1.addEventListener("click", () => {
+      resetGift1();
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
     backToLevelsFromGift3.addEventListener("click", () => { resetGift3(); showScreen(levelSelect); updateSelectUI(); });
 
@@ -1620,6 +1635,7 @@
 
     openGift1.addEventListener("click", () => {
       winPopup1.classList.add("hidden");
+      resetGift1();
       showScreen(gift1);
     });
 
@@ -1960,6 +1976,56 @@
       a.click();
       a.remove();
     }
+
+    // =============================
+    // Gift 1: Playlist reveal
+    // =============================
+    const gift1Btn = document.getElementById("gift1Btn");
+    const gift1Img = document.getElementById("gift1Img");
+    const gift1Hint = document.getElementById("gift1Hint");
+    
+    let gift1Stage = 0; // 0 = hidden, 1 = revealed
+    
+    function resetGift1(){
+      gift1Stage = 0;
+      gift1Img.src = "art/gift1_hidden.png";
+      gift1Hint.textContent = "Tap to reveal 🎧";
+    }
+    
+    // Safari-safe external open
+    function openPlaylist(){
+      const a = document.createElement("a");
+      a.href = "https://music.apple.com/fr/playlist/pl.u-AkAmPlyUx8X80Bz?l=en-GB";
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    
+    gift1Btn?.addEventListener("click", () => {
+      // pop animation
+      gift1Img.classList.remove("letterPop");
+      void gift1Img.offsetWidth;
+      gift1Img.classList.add("letterPop");
+    
+      if (gift1Stage === 0) {
+        gift1Stage = 1;
+        gift1Img.src = "art/gift1.png";
+        gift1Hint.textContent = "Tap again to listen 🎶";
+        return;
+      }
+    
+      // second tap → leave screen first (Safari-safe)
+      resetGift1();
+      showScreen(levelSelect);
+      updateSelectUI();
+    
+      requestAnimationFrame(() => {
+        setTimeout(openPlaylist, 80);
+      });
+    });
+
     // =============================
     // Gift 2: letter closed -> open -> PDF (SAFARI SAFE)
     // =============================
