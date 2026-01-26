@@ -1519,6 +1519,10 @@
       updateSelectUI();
     });
 
+    requestAnimationFrame(() => {
+      setTimeout(openPlaylist, 80);
+    });
+        
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
     backToLevelsFromGift3.addEventListener("click", () => { resetGift3(); showScreen(levelSelect); updateSelectUI(); });
 
