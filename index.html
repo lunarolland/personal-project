@@ -2204,17 +2204,15 @@
         return;
       }
     
-      // second tap → leave screen first (Safari-safe)
+      // ✅ ONE single user-initiated open (Mac-safe)
       openPlaylist();
-      
+    
+      // then reset UI
       resetGift1();
       showScreen(levelSelect);
       updateSelectUI();
-    
-      requestAnimationFrame(() => {
-        setTimeout(openPlaylist, 80);
-      });
     });
+
 
     // =============================
     // Gift 2: letter closed -> open -> PDF (SAFARI SAFE)
