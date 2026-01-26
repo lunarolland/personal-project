@@ -875,6 +875,90 @@
     .dlLink{ text-decoration:none; }
 
     /* =============================
+       FINAL REWARD: flip-card PDFs
+       ============================= */
+    .rewardWrap{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      text-align:center;
+    }
+    
+    .rewardCard{
+      width: min(360px, 92%);
+      aspect-ratio: 3 / 4;
+      border:0;
+      padding:0;
+      background: transparent;
+      perspective: 1200px;
+      cursor: pointer;
+    }
+    
+    .rewardCardInner{
+      width:100%;
+      height:100%;
+      position:relative;
+      transform-style: preserve-3d;
+      transition: transform 520ms cubic-bezier(.2,.9,.2,1);
+      border-radius: 22px;
+      box-shadow:0 22px 60px rgba(0,0,0,0.28);
+    }
+    
+    .rewardCardInner.isFlipped{
+      transform: rotateY(180deg);
+    }
+    
+    .rewardFace{
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      backface-visibility: hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:18px;
+      box-sizing:border-box;
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    
+    .rewardFront{
+      background: rgba(255,255,255,0.55);
+      color:#032030;
+    }
+    
+    .rewardBack{
+      background: rgba(255,255,255,0.55);
+      color:#032030;
+      transform: rotateY(180deg);
+    }
+    
+    .rewardTitle{
+      font-weight: 900;
+      font-size: 18px;
+    }
+    
+    .rewardSub{
+      font-weight: 800;
+      opacity: 0.85;
+      font-size: 13px;
+    }
+    
+    .rewardCardInner.popIn{
+      animation: rewardPop 420ms ease-out;
+      transform-origin: center;
+    }
+    @keyframes rewardPop{
+      from{ transform: scale(0.88); opacity: 0; }
+      to{ transform: scale(1); opacity: 1; }
+    }
+
+
+    /* =============================
        Mobile arrow controls (Level 1)
        ============================= */
     .mobileControls{
@@ -1315,9 +1399,26 @@
         <div class="badge">Reward 🎁</div>
         <button class="secondary" id="backToLevelsFromReward">←</button>
       </div>
-      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px;">
-        <p class="hint">Your final reward goes here 💗</p>
-      </div>
+        <div class="rewardWrap">
+          <p class="hint" id="rewardHint">Tap the card 💗</p>
+      
+          <button class="rewardCard" id="rewardCardBtn" aria-label="Open reward">
+            <div class="rewardCardInner" id="rewardCardInner">
+              <!-- FRONT -->
+              <div class="rewardFace rewardFront">
+                <div class="rewardTitle">Bon cadeau</div>
+                <div class="rewardSub">Tap to open</div>
+              </div>
+      
+              <!-- BACK -->
+              <div class="rewardFace rewardBack">
+                <div class="rewardTitle">Explication</div>
+                <div class="rewardSub">Tap to open</div>
+              </div>
+            </div>
+          </button>
+        </div>
+
     </div>
 
   </div>
@@ -1335,6 +1436,13 @@
     const level3 = document.getElementById("level3");
     const gift3 = document.getElementById("gift3");
     const finalReward = document.getElementById("finalReward");
+    // Final reward flip-card
+    const rewardCardBtn   = document.getElementById("rewardCardBtn");
+    const rewardCardInner = document.getElementById("rewardCardInner");
+    const rewardHint      = document.getElementById("rewardHint");
+    
+    let rewardSide = 0; // 0 = Bon_cadeau (front), 1 = Explication (back)
+
 
     const startBtn = document.getElementById("startBtn");
     const backToCover = document.getElementById("backToCover");
@@ -1523,7 +1631,12 @@
     backToLevelsFromGift2.addEventListener("click", () => { resetGift2(); showScreen(levelSelect); updateSelectUI(); });
     backToLevelsFromGift3.addEventListener("click", () => { resetGift3(); showScreen(levelSelect); updateSelectUI(); });
 
-    backToLevelsFromReward.addEventListener("click", () => { showScreen(levelSelect); updateSelectUI(); });
+    backToLevelsFromReward.addEventListener("click", () => {
+      resetFinalReward();
+      showScreen(levelSelect);
+      updateSelectUI();
+    });
+
 
     // ✅ SAFARI BFCache FIX:
     // If Safari restores the page from BFCache (persisted), force Gift2 back to safe state
@@ -2007,6 +2120,44 @@
       a.remove();
     }
 
+    function resetFinalReward(){
+      rewardSide = 0;
+      rewardCardInner?.classList.remove("isFlipped");
+      rewardHint && (rewardHint.textContent = "Tap the card 💗");
+    }
+    
+    function showFinalReward(){
+      resetFinalReward();
+      showScreen(finalReward);
+    
+      // little "pop" animation on entry
+      rewardCardInner?.classList.remove("popIn");
+      void rewardCardInner?.offsetWidth;
+      rewardCardInner?.classList.add("popIn");
+    }
+    
+    // Tap card:
+    // 1) open the current PDF
+    // 2) flip to the other side for next tap
+    rewardCardBtn?.addEventListener("click", () => {
+      const url = rewardSide === 0
+        ? "art/Bon_cadeau.pdf"
+        : "art/Explication.pdf";
+    
+      openPdfInNewTab(url);
+    
+      // flip for next time
+      rewardSide = 1 - rewardSide;
+      rewardCardInner?.classList.toggle("isFlipped", rewardSide === 1);
+    
+      if (rewardHint){
+        rewardHint.textContent = rewardSide === 0
+          ? "Next tap: Explication 📄"
+          : "Next tap: Bon cadeau 🎁";
+      }
+    });
+
+
     // =============================
     // Gift 1: Playlist reveal
     // =============================
@@ -2336,7 +2487,7 @@
         openChestPopupUI();
         return;
       }
-      showScreen(finalReward);
+      showFinalReward();
     });
 
     submitCode.addEventListener("click", () => {
