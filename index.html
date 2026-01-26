@@ -957,6 +957,15 @@
       to{ transform: scale(1); opacity: 1; }
     }
 
+    .rewardImg{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
 
     /* =============================
        Mobile arrow controls (Level 1)
@@ -1404,19 +1413,22 @@
       
           <button class="rewardCard" id="rewardCardBtn" aria-label="Open reward">
             <div class="rewardCardInner" id="rewardCardInner">
-              <!-- FRONT -->
+          
+              <!-- FRONT (Bon cadeau) -->
               <div class="rewardFace rewardFront">
-                <div class="rewardTitle">Bon cadeau</div>
-                <div class="rewardSub">Tap to open</div>
+                <img class="rewardImg" src="art/Bon_cadeau.png" alt="Bon cadeau">
+                <div class="rewardSub">Tap to flip</div>
               </div>
-      
-              <!-- BACK -->
+          
+              <!-- BACK (Explication) -->
               <div class="rewardFace rewardBack">
-                <div class="rewardTitle">Explication</div>
-                <div class="rewardSub">Tap to open</div>
+                <img class="rewardImg" src="art/Explication.png" alt="Explication">
+                <div class="rewardSub">Tap to flip</div>
               </div>
+          
             </div>
           </button>
+
         </div>
 
     </div>
@@ -2140,22 +2152,17 @@
     // 1) open the current PDF
     // 2) flip to the other side for next tap
     rewardCardBtn?.addEventListener("click", () => {
-      const url = rewardSide === 0
-        ? "art/Bon_cadeau.pdf"
-        : "art/Explication.pdf";
-    
-      openPdfInNewTab(url);
-    
-      // flip for next time
+      // flip for next time (in-game)
       rewardSide = 1 - rewardSide;
       rewardCardInner?.classList.toggle("isFlipped", rewardSide === 1);
     
       if (rewardHint){
         rewardHint.textContent = rewardSide === 0
-          ? "Next tap: Explication 📄"
-          : "Next tap: Bon cadeau 🎁";
+          ? "Tap the card for the explanation"
+          : "";
       }
     });
+
 
 
     // =============================
